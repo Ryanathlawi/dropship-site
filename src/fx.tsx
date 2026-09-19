@@ -143,66 +143,120 @@ export function Marquee({ children, reverse = false, duration = 40 }: { children
   );
 }
 
-/** ping radar: rings are latency (sqrt scale so the near servers don't pile up in the middle),
- *  a sweep runs round, blips pulse, and the numbers tick like a live reading */
-const RADAR_W = 300;
-const RADAR_H = 264;
-const RADAR_R = 88;
+/** ping radar. rings are latency on a sqrt scale, a sweep runs round every 5s and each blip flashes
+ *  exactly when the beam crosses it (css delay = angle / 360 * period), readings tick like live pings,
+ *  and clicking a blip blocks that server so the "best" readout moves, same as the app */
+const RADAR_SIZE = 360;
+const RADAR_R = 132;
 const RADAR_MAX = 160;
-const RADAR_ANGLES = [318, 38, 208, 98, 142, 243, 4];
+const RADAR_PERIOD = 5000;
+const RADAR_ANGLES = [318, 38, 198, 98, 142, 264, 4];
 
-export function Radar({ blips, you }: { blips: { label: string; ms: number }[]; you: string }) {
+export type RadarLabels = { you: string; scanning: string; best: string; servers: string; blocked: string; hint: string };
+
+export function Radar({ blips, labels }: { blips: { label: string; ms: number }[]; labels: RadarLabels }) {
   const reduced = useReducedMotion();
   const [tick, setTick] = useState(0);
+  const [blocked, setBlocked] = useState<Set<string>>(() => new Set());
   useEffect(() => {
     if (reduced) return;
     const id = setInterval(() => setTick((n) => n + 1), 1800);
     return () => clearInterval(id);
   }, [reduced]);
 
-  const cx = RADAR_W / 2;
-  const cy = RADAR_H / 2;
+  const c = RADAR_SIZE / 2;
   const rOf = (ms: number) => RADAR_R * Math.sqrt(Math.min(ms, RADAR_MAX) / RADAR_MAX);
-  const rings = [40, 80, 120, 160];
+  const toggle = (label: string) =>
+    setBlocked((prev) => {
+      const next = new Set(prev);
+      if (next.has(label)) next.delete(label);
+      else next.add(label);
+      return next;
+    });
+  const best = blips.filter((b) => !blocked.has(b.label)).sort((a, b) => a.ms - b.ms)[0];
+  const ticks = Array.from({ length: 36 }, (_, i) => i * 10);
 
   return (
-    <div className="radar" role="img" aria-label={blips.map((b) => `${b.label} ${b.ms} ms`).join(", ")} style={{ width: RADAR_W, height: RADAR_H }}>
-      <div className="radar-disc" style={{ left: cx - RADAR_R, top: cy - RADAR_R, width: RADAR_R * 2, height: RADAR_R * 2 }} aria-hidden="true">
+    <div className="radar" style={{ width: RADAR_SIZE, height: RADAR_SIZE, ["--period" as string]: `${RADAR_PERIOD}ms` }} role="group" aria-label={labels.hint}>
+      <div className="radar-disc" aria-hidden="true">
+        <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`}>
+          <defs>
+            <radialGradient id="radar-fill">
+              <stop offset="0" stopColor="var(--accent)" stopOpacity="0.22" />
+              <stop offset="0.6" stopColor="var(--accent)" stopOpacity="0.06" />
+              <stop offset="1" stopColor="var(--accent)" stopOpacity="0.14" />
+            </radialGradient>
+          </defs>
+          <circle cx={c} cy={c} r={RADAR_R} fill="url(#radar-fill)" stroke="none" />
+          {[40, 80, 120, 160].map((ms) => (
+            <circle key={ms} cx={c} cy={c} r={rOf(ms)} className="radar-ring-line" />
+          ))}
+          {[0, 30, 60, 90, 120, 150].map((deg) => {
+            const a = (deg * Math.PI) / 180;
+            return <line key={deg} x1={c - Math.cos(a) * RADAR_R} y1={c - Math.sin(a) * RADAR_R} x2={c + Math.cos(a) * RADAR_R} y2={c + Math.sin(a) * RADAR_R} className="radar-spoke" />;
+          })}
+          {ticks.map((deg) => {
+            const a = ((deg - 90) * Math.PI) / 180;
+            const len = deg % 30 === 0 ? 9 : 4;
+            return <line key={deg} x1={c + Math.cos(a) * (RADAR_R - len)} y1={c + Math.sin(a) * (RADAR_R - len)} x2={c + Math.cos(a) * RADAR_R} y2={c + Math.sin(a) * RADAR_R} className="radar-tick" />;
+          })}
+          {[40, 160].map((ms) => (
+            <text key={ms} x={c + 5} y={c + rOf(ms) - 5} className="radar-ring-label">
+              {ms} ms
+            </text>
+          ))}
+        </svg>
         <div className="radar-sweep" />
+        <div className="radar-scan" />
       </div>
-      <svg viewBox={`0 0 ${RADAR_W} ${RADAR_H}`} aria-hidden="true">
-        {rings.map((ms) => (
-          <circle key={ms} cx={cx} cy={cy} r={rOf(ms)} />
-        ))}
-        <line x1={cx - RADAR_R} y1={cy} x2={cx + RADAR_R} y2={cy} />
-        <line x1={cx} y1={cy - RADAR_R} x2={cx} y2={cy + RADAR_R} />
-        {[40, 160].map((ms) => (
-          <text key={ms} x={cx + 4} y={cy + rOf(ms) - 4} className="radar-ring-label">
-            {ms} ms
-          </text>
-        ))}
+      <svg className="radar-rim" viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`} aria-hidden="true">
+        <circle cx={c} cy={c} r={RADAR_R + 8} />
       </svg>
-      <div className="radar-you" style={{ left: cx, top: cy }} aria-hidden="true">
+
+      <div className="radar-you" aria-hidden="true">
         <i />
-        <span>{you}</span>
+        <span>{labels.you}</span>
       </div>
+
       {blips.map((b, i) => {
-        const a = ((RADAR_ANGLES[i % RADAR_ANGLES.length] - 90) * Math.PI) / 180;
+        const deg = RADAR_ANGLES[i % RADAR_ANGLES.length];
+        const a = ((deg - 90) * Math.PI) / 180;
         const r = rOf(b.ms);
-        const x = cx + Math.cos(a) * r;
-        const y = cy + Math.sin(a) * r;
+        const x = c + Math.cos(a) * r;
+        const y = c + Math.sin(a) * r;
         const right = Math.cos(a) >= 0;
         const jitter = reduced ? 0 : ((tick * 7 + i * 13) % 7) - 3;
+        const off = blocked.has(b.label);
         return (
-          <div key={b.label} className={`radar-blip ${right ? "r" : "l"}`} style={{ left: x, top: y, animationDelay: `${i * 0.35}s` }} aria-hidden="true">
+          <button
+            key={b.label}
+            className={`radar-blip ${right ? "r" : "l"} ${off ? "off" : ""}`}
+            style={{ left: x, top: y, ["--hit" as string]: `${(deg / 360) * RADAR_PERIOD}ms` }}
+            onClick={() => toggle(b.label)}
+            aria-pressed={off}
+            aria-label={`${b.label}, ${b.ms} ms`}
+          >
             <i className="radar-dot" />
-            <i className="radar-ring" />
+            <i className="radar-pulse" />
             <span className="radar-label" dir="ltr">
-              {b.label} <b className="tabular">{Math.max(1, b.ms + jitter)}</b>
+              {b.label} <b className="tabular">{off ? labels.blocked : Math.max(1, b.ms + jitter)}</b>
             </span>
-          </div>
+          </button>
         );
       })}
+
+      <div className="radar-readout" aria-live="polite">
+        <span className="radar-status">
+          <i />
+          {labels.scanning}
+        </span>
+        <span>
+          {labels.servers} <b className="tabular">{blips.length - blocked.size}/{blips.length}</b>
+        </span>
+        <span>
+          {labels.best} <b dir="ltr">{best ? `${best.label} · ${best.ms} ms` : "—"}</b>
+        </span>
+      </div>
     </div>
   );
 }

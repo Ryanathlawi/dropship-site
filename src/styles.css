@@ -1476,42 +1476,77 @@ p {
 }
 
 /* radar */
+.bento-cell:nth-child(2) {
+  grid-row: span 2;
+}
 .feat-radar {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto 1fr;
-  column-gap: 12px;
+  display: flex;
+  flex-direction: column;
 }
-.feat-radar .feat-icon,
-.feat-radar h3,
-.feat-radar p {
-  grid-column: 1;
+.feat-radar-wrap {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
-.feat-radar .radar {
-  grid-column: 2;
-  grid-row: 1 / 4;
-  align-self: center;
-  margin: -8px 0;
+.feat-radar-hint {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  color: var(--faint);
 }
 .radar {
   position: relative;
   flex-shrink: 0;
+  max-width: 100%;
   font-family: var(--mono);
   direction: ltr;
+  isolation: isolate;
 }
 .radar-disc {
   position: absolute;
+  inset: 0;
   border-radius: 50%;
   overflow: hidden;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 14%, transparent), color-mix(in srgb, var(--accent) 4%, transparent) 70%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow:
+    inset 0 0 60px -10px color-mix(in srgb, var(--accent) 35%, transparent),
+    0 0 80px -30px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.radar-disc > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.radar-ring-line {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent-text) 30%, transparent);
+  stroke-width: 1;
+}
+.radar-spoke {
+  stroke: color-mix(in srgb, var(--accent-text) 14%, transparent);
+  stroke-width: 1;
+}
+.radar-tick {
+  stroke: color-mix(in srgb, var(--accent-text) 55%, transparent);
+  stroke-width: 1.2;
+}
+.radar-ring-label {
+  font-size: 9px;
+  fill: var(--faint);
 }
 .radar-sweep {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0 74%, color-mix(in srgb, var(--accent) 60%, transparent) 100%);
-  animation: sweep-rotate 4.5s linear infinite;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 62%,
+    color-mix(in srgb, var(--accent) 6%, transparent) 62%,
+    color-mix(in srgb, var(--accent) 38%, transparent) 97%,
+    color-mix(in srgb, var(--accent-text) 95%, transparent) 100%
+  );
+  animation: sweep-rotate var(--period) linear infinite;
   will-change: transform;
 }
 @keyframes sweep-rotate {
@@ -1519,110 +1554,221 @@ p {
     transform: rotate(360deg);
   }
 }
-.radar > svg {
+.radar-scan {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0, 0, 0, 0.16) 3px 4px);
+  pointer-events: none;
+}
+:root[data-theme="light"] .radar-scan {
+  opacity: 0.35;
+}
+.radar-rim {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
+  animation: rim-rotate 40s linear infinite reverse;
+  transform-origin: center;
 }
-.radar > svg circle {
+.radar-rim circle {
   fill: none;
-  stroke: color-mix(in srgb, var(--text) 16%, transparent);
-  stroke-width: 1;
-  stroke-dasharray: 3 4;
+  stroke: color-mix(in srgb, var(--accent-text) 45%, transparent);
+  stroke-width: 1.5;
+  stroke-dasharray: 14 10;
 }
-.radar > svg line {
-  stroke: color-mix(in srgb, var(--text) 10%, transparent);
-  stroke-width: 1;
-}
-.radar-ring-label {
-  font-size: 8px;
-  fill: var(--faint);
+@keyframes rim-rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .radar-you {
   position: absolute;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
   font-size: 9px;
   color: var(--muted);
+  pointer-events: none;
 }
 .radar-you i {
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: var(--text);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 20%, transparent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--text) 20%, transparent),
+    0 0 18px var(--text);
+  animation: you-pulse 2s ease-in-out infinite;
+}
+@keyframes you-pulse {
+  50% {
+    box-shadow:
+      0 0 0 6px color-mix(in srgb, var(--text) 10%, transparent),
+      0 0 24px var(--text);
+  }
 }
 .radar-blip {
   position: absolute;
   width: 0;
   height: 0;
+  cursor: pointer;
+  z-index: 2;
 }
 .radar-blip i {
   position: absolute;
-  left: -4px;
-  top: -4px;
-  width: 8px;
-  height: 8px;
+  left: -5px;
+  top: -5px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 }
 .radar-dot {
   background: var(--accent-text);
-  box-shadow: 0 0 10px var(--accent-text);
+  box-shadow: 0 0 12px var(--accent-text);
+  animation: blip-hit var(--period) linear infinite;
+  animation-delay: var(--hit);
 }
-.radar-ring {
-  border: 1px solid var(--accent-text);
-  animation: blip 2.4s ease-out infinite;
-  animation-delay: inherit;
+@keyframes blip-hit {
+  0% {
+    transform: scale(2);
+    box-shadow: 0 0 24px var(--accent-text);
+  }
+  10%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 12px var(--accent-text);
+  }
 }
-@keyframes blip {
-  from {
+.radar-pulse {
+  border: 1.5px solid var(--accent-text);
+  animation: blip-pulse var(--period) linear infinite;
+  animation-delay: var(--hit);
+  opacity: 0;
+}
+@keyframes blip-pulse {
+  0% {
     transform: scale(1);
     opacity: 0.9;
   }
-  to {
-    transform: scale(4);
+  30%,
+  100% {
+    transform: scale(4.5);
     opacity: 0;
   }
 }
 .radar-label {
   position: absolute;
-  top: -9px;
+  top: -10px;
   white-space: nowrap;
-  font-size: 10px;
-  line-height: 18px;
-  padding: 0 7px;
+  font-size: 10.5px;
+  line-height: 20px;
+  padding: 0 8px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--bg-2) 85%, transparent);
-  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-2) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-text) 35%, transparent);
   color: var(--muted);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  transition:
+    transform 0.15s,
+    border-color 0.15s;
 }
 .radar-label b {
   font-weight: 500;
   color: var(--accent-text);
 }
+.radar-label::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent-text) 50%, transparent);
+}
 .radar-blip.r .radar-label {
-  left: 10px;
+  left: 14px;
+}
+.radar-blip.r .radar-label::before {
+  right: 100%;
 }
 .radar-blip.l .radar-label {
-  right: 10px;
+  right: 14px;
 }
-@media (max-width: 720px) {
-  .feat-radar {
-    grid-template-columns: 1fr;
-  }
-  .feat-radar .radar {
-    grid-column: 1;
+.radar-blip.l .radar-label::before {
+  left: 100%;
+}
+.radar-blip:hover .radar-label,
+.radar-blip:focus-visible .radar-label {
+  transform: scale(1.06);
+  border-color: var(--accent-text);
+}
+.radar-blip.off .radar-dot {
+  background: #ff5f5f;
+  box-shadow: 0 0 12px #ff5f5f;
+  animation: none;
+}
+.radar-blip.off .radar-pulse {
+  display: none;
+}
+.radar-blip.off .radar-label {
+  border-color: rgba(255, 95, 95, 0.5);
+  text-decoration: line-through;
+}
+.radar-blip.off .radar-label b {
+  color: #ff7a7a;
+  text-decoration: none;
+}
+.radar-readout {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--bg-2) 88%, transparent);
+  backdrop-filter: blur(8px);
+  font-size: 10.5px;
+  color: var(--muted);
+  z-index: 3;
+}
+.radar-readout b {
+  font-weight: 500;
+  color: var(--text);
+}
+.radar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-text);
+}
+.radar-status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-text);
+  animation: ping 1.4s infinite;
+}
+@media (max-width: 1000px) {
+  .bento-cell:nth-child(2) {
     grid-row: auto;
-    justify-self: center;
-    margin: 8px 0 0;
-    transform: scale(0.9);
+  }
+}
+@media (max-width: 480px) {
+  .feat-radar-wrap {
+    transform: scale(0.82);
     transform-origin: top center;
+    margin-bottom: -60px;
   }
 }
 

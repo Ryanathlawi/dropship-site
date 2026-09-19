@@ -67,7 +67,7 @@ export const en = {
     get: "Download",
     close: "Close",
   },
-  radar: { you: "you" },
+  radar: { you: "you", scanning: "scanning", best: "best", servers: "servers", blocked: "blocked", hint: "click a server to block it" },
   playground: {
     kicker: "Try it",
     title: "The app, running in your browser.",
@@ -315,7 +315,7 @@ export const ar: Dict = {
     get: "تحميل",
     close: "إغلاق",
   },
-  radar: { you: "أنت" },
+  radar: { you: "أنت", scanning: "جارٍ المسح", best: "الأفضل", servers: "سيرفرات", blocked: "محظور", hint: "اضغط على سيرفر لحظره" },
   playground: {
     kicker: "جرّبه",
     title: "البرنامج، شغّال في متصفحك.",

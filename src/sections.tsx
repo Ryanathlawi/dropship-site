@@ -504,7 +504,12 @@ export function Features() {
                   </span>
                   <h3>{f.title}</h3>
                   <p>{f.text}</p>
-                  {i === 1 && <Radar blips={BLIPS} you={t.radar.you} />}
+                  {i === 1 && (
+                    <div className="feat-radar-wrap">
+                      <Radar blips={BLIPS} labels={t.radar} />
+                      <span className="feat-radar-hint">{t.radar.hint}</span>
+                    </div>
+                  )}
                 </Spotlight>
               </Reveal>
             );
