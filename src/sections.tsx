@@ -268,6 +268,8 @@ export function Hero({ stats, theme }: { stats: Stats; theme: Theme }) {
 
           <motion.p className="hint" {...enter(0.5)}>
             {t.hero.hint}
+            <br />
+            {t.hero.credits}
           </motion.p>
         </div>
 

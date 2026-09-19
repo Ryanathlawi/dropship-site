@@ -36,6 +36,7 @@ export const en = {
     ctaAr: "Arabic version",
     ctaGit: "View source",
     hint: "Windows 10 / 11 · a single .exe, no installer",
+    credits: "Original app by stormy · Arabic edition, guided tour and this site by Ryan Athlawi",
     chipAllowed: "allowed",
     chipBlocked: "blocked",
     chipLikely: "most likely to play on",
@@ -194,10 +195,11 @@ export const en = {
   team: {
     kicker: "Team",
     title: "The people behind dropship.",
-    stormyRole: "Creator and maintainer",
-    stormyText: "Wrote dropship from scratch and keeps it running for the whole community.",
-    ryanRole: "Arabic localization",
-    ryanText: "The Arabic version, the right-to-left layout, the guided tour and this website.",
+    stormyRole: "Creator of dropship",
+    stormyText: "Wrote the original app from scratch and maintains it for the whole community.",
+    ryanRole: "Co-creator · Arabic edition, website & community",
+    ryanText:
+      "Created the Arabic edition from the ground up (right-to-left layout, Thmanyah typography, the guided tour), designed and built this website, tracked down and fixed bugs, and brought dropship to the Arabic community.",
     contributors: "Contributors on GitHub",
     website: "Website",
   },
@@ -228,7 +230,7 @@ export const en = {
   footer: {
     disclaimer:
       "Not affiliated with Blizzard Entertainment. Overwatch is a trademark of Blizzard Entertainment, Inc.",
-    made: "Built by the community, for the community.",
+    made: "Original app by stormy · Arabic edition, guided tour and this website by Ryan Athlawi.",
     source: "Site source",
     discord: "Discord",
     issues: "Report an issue",
@@ -271,6 +273,7 @@ export const ar: Dict = {
     ctaAr: "النسخة الإنجليزية",
     ctaGit: "الكود المصدري",
     hint: "ويندوز 10 / 11 · ملف .exe واحد بدون تثبيت",
+    credits: "البرنامج الأصلي من stormy · النسخة العربية والجولة التعريفية وهذا الموقع من Ryan Athlawi",
     chipAllowed: "مسموح",
     chipBlocked: "محظور",
     chipLikely: "على الأغلب بتلعب على",
@@ -429,10 +432,11 @@ export const ar: Dict = {
   team: {
     kicker: "الفريق",
     title: "الناس اللي وراء dropship.",
-    stormyRole: "المؤسس والمطوّر",
-    stormyText: "كتب dropship من الصفر ويحافظ على تشغيله للمجتمع كله.",
-    ryanRole: "التعريب",
-    ryanText: "النسخة العربية، التخطيط من اليمين لليسار، الجولة التعريفية، وهذا الموقع.",
+    stormyRole: "مؤسس dropship",
+    stormyText: "كتب البرنامج الأصلي من الصفر ويحافظ على تشغيله للمجتمع كله.",
+    ryanRole: "شريك مؤسس · النسخة العربية والموقع والمجتمع",
+    ryanText:
+      "أسّس النسخة العربية من الصفر (التخطيط من اليمين لليسار، خط ثمانية، الجولة التعريفية)، صمّم وبنى هذا الموقع كاملًا، اكتشف أخطاء وصلّحها، وأوصل dropship للمجتمع العربي.",
     contributors: "المساهمون على GitHub",
     website: "الموقع",
   },
@@ -463,7 +467,7 @@ export const ar: Dict = {
   footer: {
     disclaimer:
       "غير تابع لشركة Blizzard Entertainment. أوفرواتش علامة تجارية مسجلة لشركة Blizzard Entertainment, Inc.",
-    made: "من المجتمع، للمجتمع.",
+    made: "البرنامج الأصلي من stormy · النسخة العربية والجولة التعريفية وهذا الموقع من Ryan Athlawi.",
     source: "كود الموقع",
     discord: "ديسكورد",
     issues: "أبلغ عن مشكلة",
