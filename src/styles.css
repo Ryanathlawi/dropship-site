@@ -711,7 +711,9 @@ p {
 .bento-cell:nth-child(1),
 .bento-cell:nth-child(2),
 .bento-cell:nth-child(5),
-.bento-cell:nth-child(6) {
+.bento-cell:nth-child(6),
+.bento-cell:nth-child(7),
+.bento-cell:nth-child(8) {
   grid-column: span 2;
 }
 .feat {
@@ -757,7 +759,9 @@ p {
   .bento-cell:nth-child(1),
   .bento-cell:nth-child(2),
   .bento-cell:nth-child(5),
-  .bento-cell:nth-child(6) {
+  .bento-cell:nth-child(6),
+  .bento-cell:nth-child(7),
+  .bento-cell:nth-child(8) {
     grid-column: auto;
   }
 }
@@ -1630,6 +1634,7 @@ p {
   border-radius: 50%;
 }
 .radar-dot {
+  z-index: 1;
   background: var(--accent-text);
   box-shadow: 0 0 12px var(--accent-text);
   animation: blip-hit var(--period) linear infinite;
@@ -1683,25 +1688,31 @@ p {
   font-weight: 500;
   color: var(--accent-text);
 }
+/* labels sit up and to the side of the dot, with a short diagonal leader, so the dot itself stays clear */
 .radar-label::before {
   content: "";
   position: absolute;
-  top: 50%;
-  width: 8px;
+  top: 100%;
+  width: 19px;
   height: 1px;
-  background: color-mix(in srgb, var(--accent-text) 50%, transparent);
+  background: color-mix(in srgb, var(--accent-text) 55%, transparent);
+  transform-origin: 0 0;
 }
 .radar-blip.r .radar-label {
-  left: 14px;
+  left: 12px;
+  top: -36px;
 }
 .radar-blip.r .radar-label::before {
-  right: 100%;
+  left: 0;
+  transform: rotate(130deg);
 }
 .radar-blip.l .radar-label {
-  right: 14px;
+  right: 12px;
+  top: -36px;
 }
 .radar-blip.l .radar-label::before {
   left: 100%;
+  transform: rotate(50deg);
 }
 .radar-blip:hover .radar-label,
 .radar-blip:focus-visible .radar-label {
