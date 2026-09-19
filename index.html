@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>dropship — server selector for Overwatch 2</title>
+    <meta name="description" content="dropship is a free, portable server selector for Overwatch 2. Block the regions you don't want and play where your ping is best. Nothing in the game is touched." />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#07070e" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="dropship — server selector for Overwatch 2" />
+    <meta property="og:description" content="Block the regions you don't want and play where your ping is best. Free, open source, nothing in the game is touched." />
+    <meta property="og:image" content="https://ryanathlawi.github.io/dropship-site/img/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="%BASE_URL%img/white-bolts.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet" />
+    <script>
+      // apply saved language + theme before first paint (no flash)
+      (function () {
+        try {
+          var d = document.documentElement;
+          var q = new URLSearchParams(location.search); // ?lang=ar&theme=light overrides, and sticks
+          var l = q.get("lang") || localStorage.getItem("ds-lang") || ((navigator.language || "").toLowerCase().indexOf("ar") === 0 ? "ar" : "en");
+          var t = q.get("theme") || localStorage.getItem("ds-theme") || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+          if (l !== "ar") l = "en";
+          if (t !== "light") t = "dark";
+          if (q.has("lang")) localStorage.setItem("ds-lang", l);
+          if (q.has("theme")) localStorage.setItem("ds-theme", t);
+          d.lang = l;
+          d.dir = l === "ar" ? "rtl" : "ltr";
+          d.dataset.lang = l;
+          d.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
