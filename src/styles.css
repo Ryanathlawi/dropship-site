@@ -1113,3 +1113,8 @@ p {
   font-size: 0.8rem;
   max-width: 70ch;
 }
+
+/* the bolts icon is white; flip it on light backgrounds */
+:root[data-theme="light"] :is(.brand, .footer-brand) img {
+  filter: invert(1);
+}
