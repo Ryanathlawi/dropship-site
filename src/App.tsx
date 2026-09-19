@@ -3,7 +3,7 @@ import { useStats } from "./github";
 import { dicts, LangContext, type Lang } from "./i18n";
 import { motion } from "motion/react";
 import { CursorGlow } from "./fx";
-import { Announce, CtaBanner, DownloadSection, Faq, Features, Footer, Gallery, Hero, How, MarqueeBand, Nav, Playground, StatsBar, Team, type Theme } from "./sections";
+import { Announce, CtaBanner, DownloadSection, Faq, Features, Footer, Gallery, Hero, How, MarqueeBand, Nav, Playground, StatsBar, Team, Welcome, type Theme } from "./sections";
 
 const write = (key: string, value: string) => {
   try {
@@ -48,6 +48,7 @@ export default function App() {
   return (
     <LangContext.Provider value={{ lang, t, setLang }}>
       <CursorGlow />
+      <Welcome />
       <Announce />
       <Nav theme={theme} setTheme={setTheme} stars={stats.stars} />
       {/* remount on language change so the whole page crossfades and replays its reveals */}

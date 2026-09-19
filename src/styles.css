@@ -1478,13 +1478,11 @@ p {
 /* radar */
 .feat-radar {
   display: grid;
-  grid-template-columns: 1fr 220px;
+  grid-template-columns: 1fr auto;
   grid-template-rows: auto auto 1fr;
-  column-gap: 20px;
+  column-gap: 12px;
 }
-.feat-radar .feat-icon {
-  grid-column: 1;
-}
+.feat-radar .feat-icon,
 .feat-radar h3,
 .feat-radar p {
   grid-column: 1;
@@ -1493,51 +1491,91 @@ p {
   grid-column: 2;
   grid-row: 1 / 4;
   align-self: center;
+  margin: -8px 0;
 }
 .radar {
   position: relative;
-  width: 220px;
-  aspect-ratio: 1;
+  flex-shrink: 0;
+  font-family: var(--mono);
+  direction: ltr;
+}
+.radar-disc {
+  position: absolute;
   border-radius: 50%;
   overflow: hidden;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 10%, transparent), transparent);
-}
-.radar svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.radar circle:not(.blip-dot):not(.blip-ring) {
-  fill: none;
-  stroke: color-mix(in srgb, var(--text) 16%, transparent);
-  stroke-width: 0.8;
-}
-.radar line {
-  stroke: color-mix(in srgb, var(--text) 12%, transparent);
-  stroke-width: 0.8;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 14%, transparent), color-mix(in srgb, var(--accent) 4%, transparent) 70%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .radar-sweep {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0 78%, color-mix(in srgb, var(--accent) 55%, transparent) 100%);
-  animation: sweep-rotate 4s linear infinite;
-  opacity: 0.8;
+  background: conic-gradient(from 0deg, transparent 0 74%, color-mix(in srgb, var(--accent) 60%, transparent) 100%);
+  animation: sweep-rotate 4.5s linear infinite;
+  will-change: transform;
 }
 @keyframes sweep-rotate {
   to {
     transform: rotate(360deg);
   }
 }
-.blip-dot {
-  fill: var(--accent-text);
+.radar > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
-.blip-ring {
+.radar > svg circle {
   fill: none;
-  stroke: var(--accent-text);
+  stroke: color-mix(in srgb, var(--text) 16%, transparent);
   stroke-width: 1;
-  transform-box: fill-box;
-  transform-origin: center;
+  stroke-dasharray: 3 4;
+}
+.radar > svg line {
+  stroke: color-mix(in srgb, var(--text) 10%, transparent);
+  stroke-width: 1;
+}
+.radar-ring-label {
+  font-size: 8px;
+  fill: var(--faint);
+}
+.radar-you {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 9px;
+  color: var(--muted);
+}
+.radar-you i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--text) 20%, transparent);
+}
+.radar-blip {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.radar-blip i {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.radar-dot {
+  background: var(--accent-text);
+  box-shadow: 0 0 10px var(--accent-text);
+}
+.radar-ring {
+  border: 1px solid var(--accent-text);
   animation: blip 2.4s ease-out infinite;
   animation-delay: inherit;
 }
@@ -1547,25 +1585,44 @@ p {
     opacity: 0.9;
   }
   to {
-    transform: scale(3.2);
+    transform: scale(4);
     opacity: 0;
   }
 }
-.radar text {
-  font-family: var(--mono);
-  font-size: 6.5px;
-  fill: var(--muted);
-  direction: ltr;
+.radar-label {
+  position: absolute;
+  top: -9px;
+  white-space: nowrap;
+  font-size: 10px;
+  line-height: 18px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg-2) 85%, transparent);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  backdrop-filter: blur(4px);
 }
-@media (max-width: 560px) {
+.radar-label b {
+  font-weight: 500;
+  color: var(--accent-text);
+}
+.radar-blip.r .radar-label {
+  left: 10px;
+}
+.radar-blip.l .radar-label {
+  right: 10px;
+}
+@media (max-width: 720px) {
   .feat-radar {
     grid-template-columns: 1fr;
   }
   .feat-radar .radar {
     grid-column: 1;
     grid-row: auto;
-    margin-top: 16px;
     justify-self: center;
+    margin: 8px 0 0;
+    transform: scale(0.9);
+    transform-origin: top center;
   }
 }
 
@@ -1660,25 +1717,25 @@ p {
 
 /* giant footer wordmark */
 .wordmark {
+  display: flex;
+  justify-content: center;
+  direction: ltr;
   font-family: var(--mono);
   font-weight: 500;
-  font-size: clamp(4rem, 17vw, 15rem);
-  line-height: 0.9;
+  font-size: clamp(3.6rem, 16vw, 14rem);
+  line-height: 1;
   letter-spacing: -0.04em;
-  text-align: center;
-  direction: ltr;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--text) 18%, transparent), transparent 90%);
+  user-select: none;
+  margin: 10px 0 24px;
+  filter: drop-shadow(0 20px 40px color-mix(in srgb, var(--accent) 25%, transparent));
+}
+.wordmark-ch {
+  display: inline-block;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-text) calc(100% - var(--i) * 11%), var(--lav)) 20%, color-mix(in srgb, var(--accent-2) 70%, transparent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  user-select: none;
-  margin: 10px 0 30px;
-  transition: background 0.4s;
-}
-.wordmark:hover {
-  background: linear-gradient(90deg, var(--accent-text), var(--accent), var(--lav));
-  -webkit-background-clip: text;
-  background-clip: text;
+  will-change: transform;
 }
 
 /* pointer glow */
@@ -1704,4 +1761,67 @@ p {
   justify-content: center;
   text-align: center;
   margin-top: 18px;
+}
+
+/* welcome toast */
+.welcome {
+  position: fixed;
+  z-index: 60;
+  bottom: 20px;
+  inset-inline-end: 20px;
+  width: min(400px, calc(100vw - 32px));
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 16px 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--bg-2) 88%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: var(--shadow);
+}
+.welcome > img {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+:root[data-theme="light"] .welcome > img {
+  filter: invert(1);
+}
+.welcome-body {
+  flex: 1;
+  min-width: 0;
+}
+.welcome-body b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+.welcome-body p {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.welcome-close {
+  flex-shrink: 0;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: -4px -4px 0 0;
+  margin-inline-end: -4px;
+  margin-inline-start: 0;
+}
+@media (max-width: 480px) {
+  .welcome {
+    bottom: 12px;
+    inset-inline: 12px;
+    width: auto;
+  }
 }

@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { asset, Counter, DiscordIcon, GithubIcon, Kicker, Reveal, Spotlight, Tilt, XIcon } from "./components";
-import { Bars, Marquee, Radar, RotatingWord, SplitWords, Typewriter } from "./fx";
+import { Bars, Marquee, Radar, RotatingWord, SplitWords, Typewriter, Wordmark } from "./fx";
 import { AppReplica } from "./replica";
 import type { Lang } from "./i18n";
 import { LINKS, asset as findAsset, mb, num, type Stats } from "./github";
@@ -66,6 +66,80 @@ export function Announce() {
         </AnimatePresence>
       </div>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------ welcome */
+
+const WELCOME_KEY = "ds-welcomed";
+
+export function Welcome() {
+  const { t } = useT();
+  const reduced = useReducedMotion();
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(WELCOME_KEY)) return;
+    } catch {
+      /* ignore */
+    }
+    const id = setTimeout(() => setOpen(true), 1500);
+    return () => clearTimeout(id);
+  }, []);
+
+  const close = () => {
+    setOpen(false);
+    try {
+      localStorage.setItem(WELCOME_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  };
+
+  const h = new Date().getHours();
+  const greeting = h < 12 ? t.welcome.morning : h < 18 ? t.welcome.afternoon : t.welcome.evening;
+  const title = t.welcome.title.replace("{greeting}", greeting);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="welcome"
+          role="dialog"
+          aria-label={title}
+          initial={reduced ? false : { y: 40, opacity: 0, scale: 0.96 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          exit={reduced ? undefined : { y: 30, opacity: 0, scale: 0.96 }}
+          transition={{ type: "spring", stiffness: 260, damping: 26 }}
+        >
+          <motion.img
+            src={asset("img/white-bolts.png")}
+            alt=""
+            width={36}
+            height={36}
+            animate={reduced ? undefined : { rotate: [0, -10, 10, 0] }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+          />
+          <div className="welcome-body">
+            <b>{title}</b>
+            <p>{t.welcome.text}</p>
+            <div className="welcome-actions">
+              <a className="btn btn-primary btn-sm" href="#try" onClick={close}>
+                {t.welcome.try}
+              </a>
+              <a className="btn btn-ghost btn-sm" href="#download" onClick={close}>
+                <Download size={14} aria-hidden="true" />
+                {t.welcome.get}
+              </a>
+            </div>
+          </div>
+          <button className="icon-btn welcome-close" onClick={close} aria-label={t.welcome.close}>
+            <X size={16} aria-hidden="true" />
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -397,12 +471,13 @@ export function StatsBar({ stats, live }: { stats: Stats; live: boolean }) {
 
 const FEATURE_ICONS = [Ban, Activity, Crosshair, ToggleLeft, ShieldCheck, Package, Languages, Compass];
 const BLIPS = [
-  { label: "netherlands", ms: 24, angle: 300, r: 0.3 },
-  { label: "saudi arabia", ms: 31, angle: 40, r: 0.36 },
-  { label: "finland 2", ms: 38, angle: 200, r: 0.44 },
-  { label: "japan 2", ms: 95, angle: 120, r: 0.7 },
-  { label: "usa - east 2", ms: 102, angle: 250, r: 0.78 },
-  { label: "brazil 2", ms: 140, angle: 15, r: 0.92 },
+  { label: "netherlands", ms: 24 },
+  { label: "saudi arabia", ms: 31 },
+  { label: "finland 2", ms: 38 },
+  { label: "taiwan", ms: 92 },
+  { label: "japan 2", ms: 95 },
+  { label: "usa - east 2", ms: 102 },
+  { label: "brazil 2", ms: 140 },
 ];
 
 export function Features() {
@@ -429,7 +504,7 @@ export function Features() {
                   </span>
                   <h3>{f.title}</h3>
                   <p>{f.text}</p>
-                  {i === 1 && <Radar blips={BLIPS} />}
+                  {i === 1 && <Radar blips={BLIPS} you={t.radar.you} />}
                 </Spotlight>
               </Reveal>
             );
@@ -830,9 +905,7 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <div className="wordmark" aria-hidden="true">
-          dropship
-        </div>
+        <Wordmark text="dropship" />
         <div className="footer-inner">
           <div className="footer-brand">
             <img src={asset("img/white-bolts.png")} alt="" width={22} height={22} />

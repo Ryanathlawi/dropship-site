@@ -143,34 +143,88 @@ export function Marquee({ children, reverse = false, duration = 40 }: { children
   );
 }
 
-/** radar sweep with labelled blips */
-export function Radar({ blips }: { blips: { label: string; ms: number; angle: number; r: number }[] }) {
-  const pt = (angle: number, r: number) => {
-    const a = ((angle - 90) * Math.PI) / 180;
-    return { x: 100 + Math.cos(a) * r * 92, y: 100 + Math.sin(a) * r * 92 };
-  };
+/** ping radar: rings are latency (sqrt scale so the near servers don't pile up in the middle),
+ *  a sweep runs round, blips pulse, and the numbers tick like a live reading */
+const RADAR_W = 300;
+const RADAR_H = 264;
+const RADAR_R = 88;
+const RADAR_MAX = 160;
+const RADAR_ANGLES = [318, 38, 208, 98, 142, 243, 4];
+
+export function Radar({ blips, you }: { blips: { label: string; ms: number }[]; you: string }) {
+  const reduced = useReducedMotion();
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (reduced) return;
+    const id = setInterval(() => setTick((n) => n + 1), 1800);
+    return () => clearInterval(id);
+  }, [reduced]);
+
+  const cx = RADAR_W / 2;
+  const cy = RADAR_H / 2;
+  const rOf = (ms: number) => RADAR_R * Math.sqrt(Math.min(ms, RADAR_MAX) / RADAR_MAX);
+  const rings = [40, 80, 120, 160];
+
   return (
-    <div className="radar" role="img" aria-label={blips.map((b) => `${b.label} ${b.ms} ms`).join(", ")}>
-      <div className="radar-sweep" aria-hidden="true" />
-      <svg viewBox="0 0 200 200" aria-hidden="true">
-        {[92, 69, 46, 23].map((r) => (
-          <circle key={r} cx="100" cy="100" r={r} />
+    <div className="radar" role="img" aria-label={blips.map((b) => `${b.label} ${b.ms} ms`).join(", ")} style={{ width: RADAR_W, height: RADAR_H }}>
+      <div className="radar-disc" style={{ left: cx - RADAR_R, top: cy - RADAR_R, width: RADAR_R * 2, height: RADAR_R * 2 }} aria-hidden="true">
+        <div className="radar-sweep" />
+      </div>
+      <svg viewBox={`0 0 ${RADAR_W} ${RADAR_H}`} aria-hidden="true">
+        {rings.map((ms) => (
+          <circle key={ms} cx={cx} cy={cy} r={rOf(ms)} />
         ))}
-        <line x1="100" y1="8" x2="100" y2="192" />
-        <line x1="8" y1="100" x2="192" y2="100" />
-        {blips.map((b, i) => {
-          const { x, y } = pt(b.angle, b.r);
-          return (
-            <g key={b.label} className="blip" style={{ animationDelay: `${i * 0.4}s` }}>
-              <circle cx={x} cy={y} r="3.2" className="blip-dot" />
-              <circle cx={x} cy={y} r="3.2" className="blip-ring" />
-              <text x={x + 6} y={y - 5}>
-                {b.label} · {b.ms}
-              </text>
-            </g>
-          );
-        })}
+        <line x1={cx - RADAR_R} y1={cy} x2={cx + RADAR_R} y2={cy} />
+        <line x1={cx} y1={cy - RADAR_R} x2={cx} y2={cy + RADAR_R} />
+        {[40, 160].map((ms) => (
+          <text key={ms} x={cx + 4} y={cy + rOf(ms) - 4} className="radar-ring-label">
+            {ms} ms
+          </text>
+        ))}
       </svg>
+      <div className="radar-you" style={{ left: cx, top: cy }} aria-hidden="true">
+        <i />
+        <span>{you}</span>
+      </div>
+      {blips.map((b, i) => {
+        const a = ((RADAR_ANGLES[i % RADAR_ANGLES.length] - 90) * Math.PI) / 180;
+        const r = rOf(b.ms);
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a) * r;
+        const right = Math.cos(a) >= 0;
+        const jitter = reduced ? 0 : ((tick * 7 + i * 13) % 7) - 3;
+        return (
+          <div key={b.label} className={`radar-blip ${right ? "r" : "l"}`} style={{ left: x, top: y, animationDelay: `${i * 0.35}s` }} aria-hidden="true">
+            <i className="radar-dot" />
+            <i className="radar-ring" />
+            <span className="radar-label" dir="ltr">
+              {b.label} <b className="tabular">{Math.max(1, b.ms + jitter)}</b>
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** giant footer wordmark: each letter waves while it is on screen (transforms only, nothing repaints) */
+export function Wordmark({ text }: { text: string }) {
+  const reduced = useReducedMotion();
+  return (
+    <div className="wordmark" aria-hidden="true">
+      {text.split("").map((ch, i) => (
+        <motion.span
+          key={i}
+          className="wordmark-ch"
+          style={{ ["--i" as string]: i }}
+          initial={false}
+          whileInView={reduced ? undefined : { y: [0, -18, 0], rotate: [0, -2, 0] }}
+          viewport={{ amount: 0.4 }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.14 }}
+        >
+          {ch}
+        </motion.span>
+      ))}
     </div>
   );
 }
