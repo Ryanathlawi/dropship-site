@@ -26,6 +26,7 @@ export type Stats = {
   contributors: Contributor[];
   latest: Release;
   latestAr: Release;
+  perRelease: { v: string; n: number }[]; // .exe downloads of the last 24 upstream releases, oldest first
 };
 
 // snapshot from 2026-09-19, shown until the live numbers arrive (or if the api rate limit hits)
@@ -52,10 +53,16 @@ export const FALLBACK: Stats = {
       { name: "dropship-ar-animated.exe", size: 9835520, downloads: 4, url: "https://github.com/Ryanathlawi/dropship-ar/releases/download/v3.0.8/dropship-ar-animated.exe" },
     ],
   },
+  perRelease: [
+    { v: "v112", n: 7 }, { v: "v113", n: 260 }, { v: "v114", n: 32 }, { v: "v115", n: 355 }, { v: "v116", n: 393 }, { v: "v117", n: 34 },
+    { v: "v118", n: 15 }, { v: "v119", n: 147 }, { v: "v120", n: 322 }, { v: "v121", n: 2515 }, { v: "v122", n: 5085 }, { v: "v123", n: 4410 },
+    { v: "v124", n: 11972 }, { v: "v126", n: 9162 }, { v: "v128", n: 12772 }, { v: "v129", n: 23737 }, { v: "v2.0", n: 27672 }, { v: "v3.0.0", n: 1416 },
+    { v: "v3.0.1", n: 86 }, { v: "v3.0.2", n: 413 }, { v: "v3.0.3", n: 422 }, { v: "v3.0.4", n: 335 }, { v: "v3.0.5", n: 13305 }, { v: "v3.0.6", n: 22391 },
+  ],
 };
 
 const API = "https://api.github.com/repos/";
-const CACHE_KEY = "ds-stats-v1";
+const CACHE_KEY = "ds-stats-v2";
 const CACHE_TTL = 15 * 60 * 1000;
 
 type GhRelease = { tag_name: string; published_at: string; draft: boolean; prerelease: boolean; assets: { name: string; size: number; download_count: number; browser_download_url: string }[] };
@@ -109,6 +116,10 @@ async function fetchStats(): Promise<Stats> {
     contributors: [...seen.values()].sort((a, b) => b.contributions - a.contributions),
     latest: toRelease(up[0]),
     latestAr: toRelease(ar[0]),
+    perRelease: up
+      .slice(0, 24)
+      .reverse()
+      .map((r) => ({ v: r.tag_name, n: exeDownloads([r]) })),
   };
 }
 

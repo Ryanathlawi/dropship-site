@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useStats } from "./github";
 import { dicts, LangContext, type Lang } from "./i18n";
-import { DownloadSection, Faq, Features, Footer, Gallery, Hero, How, Nav, StatsBar, Team, type Theme } from "./sections";
+import { motion } from "motion/react";
+import { CursorGlow } from "./fx";
+import { Announce, CtaBanner, DownloadSection, Faq, Features, Footer, Gallery, Hero, How, MarqueeBand, Nav, Playground, StatsBar, Team, type Theme } from "./sections";
 
 const write = (key: string, value: string) => {
   try {
@@ -45,18 +47,26 @@ export default function App() {
 
   return (
     <LangContext.Provider value={{ lang, t, setLang }}>
+      <CursorGlow />
+      <Announce />
       <Nav theme={theme} setTheme={setTheme} stars={stats.stars} />
-      <main>
-        <Hero stats={stats} theme={theme} />
-        <StatsBar stats={stats} live={live} />
-        <Features />
-        <How />
-        <Gallery />
-        <Faq />
-        <Team stats={stats} />
-        <DownloadSection stats={stats} />
-      </main>
-      <Footer />
+      {/* remount on language change so the whole page crossfades and replays its reveals */}
+      <motion.div key={lang} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <main>
+          <Hero stats={stats} theme={theme} />
+          <MarqueeBand />
+          <Playground theme={theme} />
+          <StatsBar stats={stats} live={live} />
+          <Features />
+          <How />
+          <Gallery />
+          <Faq />
+          <Team stats={stats} />
+          <CtaBanner stats={stats} />
+          <DownloadSection stats={stats} />
+        </main>
+        <Footer />
+      </motion.div>
     </LangContext.Provider>
   );
 }

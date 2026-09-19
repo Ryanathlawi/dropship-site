@@ -8,12 +8,18 @@ export const en = {
     description:
       "dropship is a free, portable server selector for Overwatch 2. Block the regions you don't want and play where your ping is best. Nothing in the game is touched.",
   },
+  announce: [
+    { text: "v3.0.6 is out: 9 MB, no installer, in-app updates", href: "#download" },
+    { text: "The Arabic version is here, with a full right-to-left layout", href: "#download" },
+    { text: "Something not working? Real people answer in the Discord", href: "https://discord.gg/QYrF8CVhbC" },
+  ],
   nav: {
     features: "Features",
     how: "How it works",
     gallery: "Screenshots",
     faq: "FAQ",
     team: "Team",
+    try: "Try it",
     download: "Download",
     github: "GitHub",
     theme: "Toggle theme",
@@ -23,7 +29,7 @@ export const en = {
   hero: {
     badge: "Free · open source · Windows",
     title1: "Play Overwatch 2",
-    title2: "on the servers you choose.",
+    words: ["where you choose.", "on saudi arabia.", "on netherlands.", "on japan.", "on your terms."],
     subtitle:
       "dropship is a portable server selector. Block the regions you don't want, and the matchmaker keeps you where your ping is best. Nothing in the game is touched.",
     cta: "Download for Windows",
@@ -34,6 +40,28 @@ export const en = {
     chipBlocked: "blocked",
     chipLikely: "most likely to play on",
     windowTitle: "dropship",
+    demoTitle: "i want to play on..",
+    demoLikely: "you are most likely to play on",
+    demoHint: "interactive demo: click a server to block or allow it",
+  },
+  marquee: [
+    "free forever",
+    "open source",
+    "a single 9 MB .exe",
+    "no installer",
+    "no game files touched",
+    "ping for every server",
+    "blocks persist after closing",
+    "english and arabic",
+    "in-app updates",
+    "windows 10 / 11",
+  ],
+  playground: {
+    kicker: "Try it",
+    title: "The app, running in your browser.",
+    subtitle:
+      "A working replica of the dropship window. Block servers, switch tabs, change the theme and language, collapse it. Nothing is installed and nothing is sent anywhere.",
+    tip: "Left click blocks or allows a server. Right click keeps that server and flips all the others, exactly like the app.",
   },
   stats: {
     downloads: "Downloads",
@@ -42,6 +70,7 @@ export const en = {
     contributors: "Contributors",
     live: "live from GitHub",
     cached: "GitHub numbers",
+    chart: "Downloads per release, oldest to newest",
   },
   features: {
     kicker: "Features",
@@ -100,10 +129,21 @@ export const en = {
         text: "Close the app if you like. Your blocks stay until you unblock them.",
       },
     ],
+    logTitle: "log",
+    log: [
+      "dropship v3.0.6 · windows 11",
+      "game: S:\\overwatch\\_retail_\\overwatch.exe",
+      "pinging 13 servers.. done (best: netherlands, 24 ms)",
+      "blocked: usa - east 2, usa - central",
+      "wfp filter applied. persists until you unblock ✓",
+      "you are most likely to play on \"netherlands\" (ams1)",
+      "game closed → pending changes applied",
+    ],
   },
   gallery: {
     kicker: "Screenshots",
     title: "A closer look.",
+    autoplay: "auto-playing · hover to pause",
     items: [
       { key: "en-expanded", label: "Expanded", caption: "The main window: your game, the server list and the tabs." },
       { key: "en-collapsed", label: "Collapsed", caption: "Collapsed mode keeps only the server list on screen." },
@@ -161,6 +201,11 @@ export const en = {
     contributors: "Contributors on GitHub",
     website: "Website",
   },
+  cta: {
+    title: "Ready to choose your servers?",
+    text: "Free, 9 MB, no installer. Your blocks are one click away.",
+    button: "Download dropship",
+  },
   download: {
     kicker: "Download",
     title: "Get dropship.",
@@ -198,12 +243,18 @@ export const ar: Dict = {
     description:
       "dropship برنامج مجاني ومحمول لاختيار سيرفرات أوفرواتش 2. احظر المناطق اللي ما تبيها والعب حيث البنق أفضل. ما يلمس اللعبة أبدًا.",
   },
+  announce: [
+    { text: "الإصدار 3.0.6 متوفر: 9 م.ب، بدون تثبيت، وتحديثات داخل البرنامج", href: "#download" },
+    { text: "النسخة العربية وصلت، بتخطيط كامل من اليمين لليسار", href: "#download" },
+    { text: "شي ما يشتغل؟ ناس حقيقيين يردون عليك في الديسكورد", href: "https://discord.gg/QYrF8CVhbC" },
+  ],
   nav: {
     features: "المميزات",
     how: "طريقة العمل",
     gallery: "لقطات",
     faq: "الأسئلة",
     team: "الفريق",
+    try: "جرّبه",
     download: "تحميل",
     github: "GitHub",
     theme: "تبديل المظهر",
@@ -213,7 +264,7 @@ export const ar: Dict = {
   hero: {
     badge: "مجاني · مفتوح المصدر · ويندوز",
     title1: "العب أوفرواتش 2",
-    title2: "على السيرفرات اللي تختارها.",
+    words: ["حيث تختار أنت.", "على سيرفر السعودية.", "على سيرفر هولندا.", "على سيرفر اليابان.", "على شروطك أنت."],
     subtitle:
       "dropship برنامج محمول لاختيار السيرفرات. احظر المناطق اللي ما تبيها، ويبقيك الماتش ميكر حيث البنق أفضل. ما يلمس اللعبة أبدًا.",
     cta: "تحميل النسخة العربية",
@@ -224,6 +275,28 @@ export const ar: Dict = {
     chipBlocked: "محظور",
     chipLikely: "على الأغلب بتلعب على",
     windowTitle: "dropship — النسخة العربية",
+    demoTitle: "أبي ألعب على..",
+    demoLikely: "على الأغلب بتلعب على",
+    demoHint: "تجربة تفاعلية: اضغط على سيرفر لحظره أو السماح به",
+  },
+  marquee: [
+    "مجاني للأبد",
+    "مفتوح المصدر",
+    "ملف .exe واحد بحجم 9 م.ب",
+    "بدون تثبيت",
+    "ما يلمس ملفات اللعبة",
+    "بنق لكل سيرفر",
+    "الحظر يبقى بعد الإغلاق",
+    "عربي وإنجليزي",
+    "تحديثات داخل البرنامج",
+    "ويندوز 10 / 11",
+  ],
+  playground: {
+    kicker: "جرّبه",
+    title: "البرنامج، شغّال في متصفحك.",
+    subtitle:
+      "نسخة طبق الأصل من نافذة dropship تشتغل هنا. احظر سيرفرات، بدّل التبويبات، غيّر المظهر واللغة، صغّرها. ما فيه شي يتثبّت ولا شي يُرسل لأي مكان.",
+    tip: "الضغطة اليسرى تحظر السيرفر أو تسمح به. الضغطة اليمنى تبقي هذا السيرفر وتعكس كل الباقي، بالضبط مثل البرنامج.",
   },
   stats: {
     downloads: "تحميل",
@@ -232,6 +305,7 @@ export const ar: Dict = {
     contributors: "مساهم",
     live: "مباشر من GitHub",
     cached: "أرقام GitHub",
+    chart: "التحميلات لكل إصدار، من الأقدم إلى الأحدث",
   },
   features: {
     kicker: "المميزات",
@@ -290,10 +364,21 @@ export const ar: Dict = {
         text: "سكّر البرنامج لو تبي. الحظر يبقى لين ترفعه بنفسك.",
       },
     ],
+    logTitle: "السجل",
+    log: [
+      "dropship v3.0.6 · ويندوز 11",
+      "اللعبة: S:\\overwatch\\_retail_\\overwatch.exe",
+      "جارٍ قياس 13 سيرفر.. تم (الأفضل: netherlands، 24 ms)",
+      "محظور: usa - east 2، usa - central",
+      "تم تطبيق فلتر WFP. يبقى لين ترفع الحظر ✓",
+      "على الأغلب بتلعب على \"netherlands\" (ams1)",
+      "اللعبة أُغلقت ← تم تطبيق التغييرات المعلّقة",
+    ],
   },
   gallery: {
     kicker: "لقطات",
     title: "نظرة أقرب.",
+    autoplay: "تشغيل تلقائي · مرّر الماوس للإيقاف",
     items: [
       { key: "en-expanded", label: "الوضع الكامل", caption: "النافذة الرئيسية: لعبتك، قائمة السيرفرات، والتبويبات." },
       { key: "en-collapsed", label: "الوضع المصغّر", caption: "الوضع المصغّر يبقي قائمة السيرفرات فقط على الشاشة." },
@@ -350,6 +435,11 @@ export const ar: Dict = {
     ryanText: "النسخة العربية، التخطيط من اليمين لليسار، الجولة التعريفية، وهذا الموقع.",
     contributors: "المساهمون على GitHub",
     website: "الموقع",
+  },
+  cta: {
+    title: "جاهز تختار سيرفراتك؟",
+    text: "مجاني، 9 م.ب، بدون تثبيت. حظرك على بُعد ضغطة واحدة.",
+    button: "حمّل dropship",
   },
   download: {
     kicker: "تحميل",
