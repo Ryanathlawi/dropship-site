@@ -1,17 +1,18 @@
 /* proposed new interface for the arabic edition: the launcher. world map backdrop, glass panels */
 .lch {
-  --l-bg: #03100a;
-  --l-glass: rgba(6, 22, 13, 0.9);
-  --l-glass-2: rgba(120, 220, 160, 0.08);
-  --l-line: rgba(120, 220, 160, 0.16);
-  --l-line-2: rgba(120, 220, 160, 0.34);
-  --l-text: #f0f8f3;
-  --l-muted: #a3bcae;
-  --l-faint: #6c8878;
-  --l-accent: #43d17f;
-  --l-accent-deep: #14994f;
-  --l-gold: #e3c56f;
-  --l-red: #ff5c5c;
+  /* teal on graphite (default) */
+  --l-bg: #0a0f14;
+  --l-glass: rgba(15, 22, 29, 0.92);
+  --l-glass-2: rgba(94, 234, 212, 0.08);
+  --l-line: rgba(94, 234, 212, 0.16);
+  --l-line-2: rgba(94, 234, 212, 0.34);
+  --l-text: #eef4f6;
+  --l-muted: #9fb3bd;
+  --l-faint: #6a8089;
+  --l-accent: #5eead4;
+  --l-accent-deep: #14b8a6;
+  --l-gold: #fbbf24;
+  --l-red: #fb7185;
   --l-font: "Thmanyah Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
   position: relative;
   display: grid;
@@ -43,8 +44,96 @@
   --l-font: "Inter", system-ui, sans-serif;
 }
 .lch-light {
+  --l-bg: #eef3f5;
+  --l-glass: rgba(255, 255, 255, 0.94);
+  --l-glass-2: rgba(15, 118, 110, 0.07);
+  --l-line: rgba(15, 118, 110, 0.14);
+  --l-line-2: rgba(15, 118, 110, 0.3);
+  --l-text: #0c1a1f;
+  --l-muted: #4d626a;
+  --l-faint: #7f929a;
+  --l-accent: #0f766e;
+  --l-accent-deep: #0d9488;
+  --l-gold: #b45309;
+  --l-red: #dc2626;
+  box-shadow: 0 60px 120px -50px rgba(10, 40, 50, 0.3);
+}
+
+/* violet on midnight */
+.lch[data-pal="violet"] {
+  --l-bg: #0b0b14;
+  --l-glass: rgba(19, 19, 42, 0.92);
+  --l-glass-2: rgba(167, 139, 250, 0.09);
+  --l-line: rgba(167, 139, 250, 0.18);
+  --l-line-2: rgba(167, 139, 250, 0.36);
+  --l-muted: #aaa7c4;
+  --l-faint: #6f6d8c;
+  --l-accent: #a78bfa;
+  --l-accent-deep: #7c3aed;
+  --l-gold: #f59e0b;
+  --l-red: #f87171;
+}
+.lch-light[data-pal="violet"] {
+  --l-bg: #f2f1fb;
+  --l-glass: rgba(255, 255, 255, 0.94);
+  --l-glass-2: rgba(109, 40, 217, 0.07);
+  --l-line: rgba(109, 40, 217, 0.14);
+  --l-line-2: rgba(109, 40, 217, 0.3);
+  --l-text: #15102b;
+  --l-muted: #5a5573;
+  --l-faint: #8a86a3;
+  --l-accent: #6d28d9;
+  --l-accent-deep: #7c3aed;
+  --l-gold: #b45309;
+  --l-red: #dc2626;
+}
+
+/* ember: the original dropship orange, with its lavender as the warm second */
+.lch[data-pal="ember"] {
+  --l-bg: #0d0e15;
+  --l-glass: rgba(22, 23, 31, 0.92);
+  --l-glass-2: rgba(252, 157, 31, 0.08);
+  --l-line: rgba(252, 157, 31, 0.16);
+  --l-line-2: rgba(252, 157, 31, 0.34);
+  --l-muted: #a9abb8;
+  --l-faint: #6e7080;
+  --l-accent: #fc9d1f;
+  --l-accent-deep: #df611b;
+  --l-gold: #bdb2ff;
+  --l-red: #ff6b6b;
+}
+.lch-light[data-pal="ember"] {
+  --l-bg: #f0f0f8;
+  --l-glass: rgba(255, 255, 255, 0.94);
+  --l-glass-2: rgba(201, 101, 10, 0.07);
+  --l-line: rgba(201, 101, 10, 0.14);
+  --l-line-2: rgba(201, 101, 10, 0.3);
+  --l-text: #16161f;
+  --l-muted: #585b6b;
+  --l-faint: #878a9c;
+  --l-accent: #c9650a;
+  --l-accent-deep: #df611b;
+  --l-gold: #5b4fcf;
+  --l-red: #dc2626;
+}
+
+/* green: the saudi option */
+.lch[data-pal="green"] {
+  --l-bg: #03100a;
+  --l-glass: rgba(6, 22, 13, 0.92);
+  --l-glass-2: rgba(120, 220, 160, 0.08);
+  --l-line: rgba(120, 220, 160, 0.16);
+  --l-line-2: rgba(120, 220, 160, 0.34);
+  --l-muted: #a3bcae;
+  --l-faint: #6c8878;
+  --l-accent: #43d17f;
+  --l-accent-deep: #14994f;
+  --l-gold: #e3c56f;
+  --l-red: #ff5c5c;
+}
+.lch-light[data-pal="green"] {
   --l-bg: #eaf3ed;
-  --l-glass: rgba(255, 255, 255, 0.92);
+  --l-glass: rgba(255, 255, 255, 0.94);
   --l-glass-2: rgba(0, 108, 53, 0.07);
   --l-line: rgba(0, 108, 53, 0.14);
   --l-line-2: rgba(0, 108, 53, 0.28);
@@ -55,7 +144,42 @@
   --l-accent-deep: #0f8a45;
   --l-gold: #a8862c;
   --l-red: #d64545;
-  box-shadow: 0 60px 120px -50px rgba(0, 60, 30, 0.35);
+}
+
+/* palette swatches */
+.lch-pals {
+  display: flex;
+  gap: 6px;
+  margin-inline-end: 6px;
+}
+.lch-pal {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--l-line-2);
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.lch-pal.teal {
+  background: #5eead4;
+}
+.lch-pal.violet {
+  background: #a78bfa;
+}
+.lch-pal.ember {
+  background: #fc9d1f;
+}
+.lch-pal.green {
+  background: #43d17f;
+}
+.lch-pal:hover {
+  transform: scale(1.15);
+}
+.lch-pal.active {
+  border-color: var(--l-bg);
+  box-shadow: 0 0 0 2px var(--l-text);
 }
 .lch .tabular,
 .lch kbd,
@@ -197,7 +321,7 @@
   fill: var(--l-gold);
 }
 .lch-node.poor .lch-dot {
-  fill: #ff9d5c;
+  fill: var(--l-red);
 }
 .lch-node.off .lch-dot {
   fill: var(--l-red);
@@ -530,7 +654,7 @@
   background: var(--l-gold);
 }
 .lch-row.poor .lch-bar i {
-  background: #ff9d5c;
+  background: var(--l-red);
 }
 .lch-ms {
   font-size: 0.95em;

@@ -14,6 +14,15 @@ import "./replica2.css";
 
 type View = "map" | "log" | "help" | "settings";
 type RepTheme = "dark" | "light";
+type Pal = "teal" | "violet" | "ember" | "green";
+const PALS: Pal[] = ["teal", "violet", "ember", "green"];
+// dot colour of the world map per palette (rgb), dark and light
+const DOTS: Record<Pal, { dark: string; light: string }> = {
+  teal: { dark: "94, 234, 212", light: "15, 118, 110" },
+  violet: { dark: "167, 139, 250", light: "109, 40, 217" },
+  ember: { dark: "252, 157, 31", light: "201, 101, 10" },
+  green: { dark: "67, 209, 127", light: "0, 108, 53" },
+};
 
 const GEO: Record<string, [number, number]> = {
   ams1: [52.37, 4.9],
@@ -57,6 +66,8 @@ const L = {
     lang: "language",
     theme: "theme",
     mini: "mini",
+    palette: "colors",
+    pals: { teal: "teal", violet: "violet", ember: "ember", green: "green" } as Record<Pal, string>,
     foot: "original app by stormy · arabic edition by Ryan Athlawi",
     keys: { close: "close", toggle: "toggle", invert: "invert others" },
     blockedN: (n: number) => `${n} blocked`,
@@ -80,6 +91,8 @@ const L = {
     lang: "اللغة",
     theme: "المظهر",
     mini: "مصغّر",
+    palette: "الألوان",
+    pals: { teal: "تيل", violet: "بنفسجي", ember: "برتقالي", green: "أخضر" } as Record<Pal, string>,
     foot: "البرنامج الأصلي من stormy · النسخة العربية من Ryan Athlawi",
     keys: { close: "إغلاق", toggle: "تبديل", invert: "عكس الباقي" },
     blockedN: (n: number) => (n === 0 ? "بدون حظر" : n === 1 ? "سيرفر محظور" : n === 2 ? "سيرفران محظوران" : `${n} محظورة`),
@@ -90,7 +103,7 @@ const VIEW_ICONS: Record<View, typeof Heart> = { map: MapIcon, log: Terminal, he
 const grade = (ms: number) => (ms < 50 ? "good" : ms < 100 ? "fair" : "poor");
 
 /** the dotted world, drawn once on a canvas (thousands of dots, zero dom) */
-function DotWorld({ light }: { light: boolean }) {
+function DotWorld({ light, rgb }: { light: boolean; rgb: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const cv = ref.current;
@@ -114,13 +127,13 @@ function DotWorld({ light }: { light: boolean }) {
         const d = Math.hypot(x - you.x, y - you.y);
         const near = Math.max(0, 1 - d / 700);
         const a = (light ? 0.28 : 0.32) + near * 0.5;
-        ctx.fillStyle = light ? `rgba(0, 108, 53, ${a})` : `rgba(67, 209, 127, ${a})`;
+        ctx.fillStyle = `rgba(${rgb}, ${a})`;
         ctx.beginPath();
         ctx.arc(x, y, 2.6 + near * 1.2, 0, Math.PI * 2);
         ctx.fill();
       }
     }
-  }, [light]);
+  }, [light, rgb]);
   return <canvas ref={ref} className="lch-world" style={{ aspectRatio: `${VB_W} / ${VB_H}` }} aria-hidden="true" />;
 }
 
@@ -135,6 +148,7 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
   const [mode, setMode] = useState<"always" | "open">("always");
   const [gameOpen, setGameOpen] = useState(false);
   const [hover, setHover] = useState<string | null>(null);
+  const [pal, setPal] = useState<Pal>("teal");
 
   useEffect(() => setLang(siteLang), [siteLang]);
   useEffect(() => {
@@ -176,11 +190,11 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
   };
 
   return (
-    <div className={`lch lch-${theme} ${mini ? "mini" : ""}`} dir={ar ? "rtl" : "ltr"} lang={lang}>
+    <div className={`lch lch-${theme} ${mini ? "mini" : ""}`} data-pal={pal} dir={ar ? "rtl" : "ltr"} lang={lang}>
       {/* backdrop: mesh + dotted world + connections */}
       <div className="lch-mesh" aria-hidden="true" />
       <div className="lch-map" aria-hidden={mini}>
-        <DotWorld light={theme === "light"} />
+        <DotWorld light={theme === "light"} rgb={DOTS[pal][theme]} />
         <svg className="lch-net" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet">
           {SERVERS.filter((sv) => !blocked.has(sv.code)).map((sv) => (
             <path key={sv.code} d={arc(sv.code)} className={`lch-arc ${best?.code === sv.code ? "best" : ""} ${hover === sv.code ? "hot" : ""}`} />
@@ -243,6 +257,11 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
             <i />
             {t.game} · {gameOpen ? t.running : t.closed}
           </span>
+        </div>
+        <div className="lch-pals" role="radiogroup" aria-label={t.palette}>
+          {PALS.map((k) => (
+            <button key={k} className={`lch-pal ${k} ${pal === k ? "active" : ""}`} onClick={() => setPal(k)} role="radio" aria-checked={pal === k} title={t.pals[k]} aria-label={t.pals[k]} />
+          ))}
         </div>
         <span className="lch-win" aria-hidden="true">
           <i>–</i>
@@ -376,6 +395,16 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
                   <h4>{s.tabs.options}</h4>
                 </div>
                 <div className="lch-settings">
+                  <label className="lch-setting">
+                    <span>{t.palette}</span>
+                    <span className="lch-seg">
+                      {PALS.map((k) => (
+                        <button key={k} className={pal === k ? "active" : ""} onClick={() => setPal(k)}>
+                          {t.pals[k]}
+                        </button>
+                      ))}
+                    </span>
+                  </label>
                   <label className="lch-setting">
                     <span>{s.options.block}</span>
                     <span className="lch-seg">
