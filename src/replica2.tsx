@@ -228,7 +228,8 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
                 <circle r="16" className="lch-hit" />
                 <circle r="12" className="lch-halo" />
                 <circle r="6" className="lch-dot" />
-                <text x={p.x > VB_W * 0.8 ? -14 : 14} y="5" textAnchor={p.x > VB_W * 0.8 ? "end" : "start"} className="lch-node-label">
+                <image href={asset(`img/flags/${sv.flag}.svg`)} x={p.x > VB_W * 0.8 ? -40 : 12} y="-26" width="28" height="21" className="lch-node-flag" />
+                <text x={p.x > VB_W * 0.8 ? -14 : 14} y="12" textAnchor={p.x > VB_W * 0.8 ? "end" : "start"} className="lch-node-label">
                   {sv.name}
                   <tspan className="lch-node-ms"> {sv.ms}</tspan>
                 </text>
@@ -323,10 +324,10 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
                           onMouseLeave={() => setHover(null)}
                           aria-pressed={off}
                         >
-                          <span className="lch-code tabular">{sv.code}</span>
+                          <img className="lch-flag" src={asset(`img/flags/${sv.flag}.svg`)} alt="" width={28} height={21} loading="lazy" />
                           <span className="lch-name-wrap">
                             <span className="lch-name" dir="ltr">
-                              {sv.name}
+                              {sv.name} <small className="lch-code tabular">{sv.code}</small>
                             </span>
                             <span className="lch-bar">
                               <i style={{ width: `${(sv.ms / maxMs) * 100}%` }} />
@@ -446,7 +447,8 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
               <i />
             </span>
             <AnimatePresence mode="wait" initial={false}>
-              <motion.b key={best?.code ?? "-"} dir="ltr" initial={reduced ? false : { y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={reduced ? undefined : { y: -8, opacity: 0 }} transition={{ duration: 0.2 }}>
+              <motion.b key={best?.code ?? "-"} dir="ltr" className="lch-route-best" initial={reduced ? false : { y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={reduced ? undefined : { y: -8, opacity: 0 }} transition={{ duration: 0.2 }}>
+                {best && <img className="lch-flag" src={asset(`img/flags/${best.flag}.svg`)} alt="" width={28} height={21} />}
                 {best?.name ?? "—"}
               </motion.b>
             </AnimatePresence>

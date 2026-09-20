@@ -12,17 +12,17 @@ type RepTheme = "dark" | "light";
 type Tab = "welcome" | "log" | "help" | "options";
 
 export const SERVERS = [
-  { name: "netherlands", code: "ams1", ms: 24 },
-  { name: "brazil 2", code: "gru2", ms: 140 },
-  { name: "finland 2", code: "hel2", ms: 38 },
-  { name: "saudi arabia", code: "ruh1", ms: 31 },
-  { name: "singapore 2", code: "sin2", ms: 88 },
-  { name: "japan 2", code: "nrt2", ms: 95 },
-  { name: "usa - east 2", code: "ord1", ms: 102 },
-  { name: "usa - southwest", code: "lax1", ms: 128 },
-  { name: "usa - central", code: "gue4", ms: 115 },
-  { name: "australia 3", code: "syd3", ms: 160 },
-  { name: "taiwan", code: "tpe1", ms: 92 },
+  { name: "netherlands", code: "ams1", ms: 24, flag: "nl" },
+  { name: "brazil 2", code: "gru2", ms: 140, flag: "br" },
+  { name: "finland 2", code: "hel2", ms: 38, flag: "fi" },
+  { name: "saudi arabia", code: "ruh1", ms: 31, flag: "sa" },
+  { name: "singapore 2", code: "sin2", ms: 88, flag: "sg" },
+  { name: "japan 2", code: "nrt2", ms: 95, flag: "jp" },
+  { name: "usa - east 2", code: "ord1", ms: 102, flag: "us" },
+  { name: "usa - southwest", code: "lax1", ms: 128, flag: "us" },
+  { name: "usa - central", code: "gue4", ms: 115, flag: "us" },
+  { name: "australia 3", code: "syd3", ms: 160, flag: "au" },
+  { name: "taiwan", code: "tpe1", ms: 92, flag: "tw" },
 ];
 
 export const STR = {

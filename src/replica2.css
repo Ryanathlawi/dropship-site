@@ -593,7 +593,7 @@
 .lch-row {
   width: 100%;
   display: grid;
-  grid-template-columns: 42px 1fr auto 32px;
+  grid-template-columns: 28px 1fr auto 32px;
   align-items: center;
   gap: 10px;
   padding: 7px 8px;
@@ -619,14 +619,34 @@
   text-decoration: line-through;
 }
 .lch-code {
-  font-size: 0.7em;
+  font-size: 0.68em;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--l-faint);
-  padding: 3px 0;
-  border-radius: 6px;
-  background: var(--l-glass-2);
-  text-align: center;
+  margin-inline-start: 6px;
+}
+.lch-flag {
+  width: 28px;
+  height: 21px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+.lch-row.off .lch-flag {
+  filter: grayscale(1);
+}
+.lch-node-flag {
+  clip-path: inset(0 round 3px);
+  opacity: 0.95;
+}
+.lch-node.off .lch-node-flag {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+.lch-route-best {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .lch-name-wrap {
   display: flex;
