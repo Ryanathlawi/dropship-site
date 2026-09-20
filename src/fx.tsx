@@ -146,38 +146,57 @@ export function Marquee({ children, reverse = false, duration = 40 }: { children
 /** ping radar. rings are latency on a sqrt scale, a sweep runs round every 5s and each blip flashes
  *  exactly when the beam crosses it (css delay = angle / 360 * period), readings tick like live pings,
  *  and clicking a blip blocks that server so the "best" readout moves, same as the app */
-const RADAR_SIZE = 360;
-const RADAR_R = 132;
 const RADAR_MAX = 160;
 const RADAR_PERIOD = 5000;
-const RADAR_ANGLES = [318, 38, 198, 98, 142, 264, 4];
+const RADAR_ANGLES = [318, 38, 198, 98, 142, 264, 4, 70, 178, 236, 292];
 
 export type RadarLabels = { you: string; scanning: string; best: string; servers: string; blocked: string; hint: string };
 
-export function Radar({ blips, labels }: { blips: { label: string; ms: number }[]; labels: RadarLabels }) {
+export function Radar({
+  blips,
+  labels,
+  blocked: controlled,
+  onToggle,
+  compact = false,
+  size = 360,
+}: {
+  blips: { label: string; ms: number; code?: string }[];
+  labels: RadarLabels;
+  /** pass these to drive the radar from outside (the hud concept shares state with its list) */
+  blocked?: Set<string>;
+  onToggle?: (label: string) => void;
+  /** short code labels and no readout */
+  compact?: boolean;
+  size?: number;
+}) {
   const reduced = useReducedMotion();
   const [tick, setTick] = useState(0);
-  const [blocked, setBlocked] = useState<Set<string>>(() => new Set());
+  const [own, setOwn] = useState<Set<string>>(() => new Set());
+  const blocked = controlled ?? own;
   useEffect(() => {
     if (reduced) return;
     const id = setInterval(() => setTick((n) => n + 1), 1800);
     return () => clearInterval(id);
   }, [reduced]);
 
+  const RADAR_SIZE = size;
+  const RADAR_R = (size * 132) / 360;
   const c = RADAR_SIZE / 2;
   const rOf = (ms: number) => RADAR_R * Math.sqrt(Math.min(ms, RADAR_MAX) / RADAR_MAX);
-  const toggle = (label: string) =>
-    setBlocked((prev) => {
+  const toggle = (label: string) => {
+    if (onToggle) return onToggle(label);
+    setOwn((prev) => {
       const next = new Set(prev);
       if (next.has(label)) next.delete(label);
       else next.add(label);
       return next;
     });
+  };
   const best = blips.filter((b) => !blocked.has(b.label)).sort((a, b) => a.ms - b.ms)[0];
   const ticks = Array.from({ length: 36 }, (_, i) => i * 10);
 
   return (
-    <div className="radar" style={{ width: RADAR_SIZE, height: RADAR_SIZE, ["--period" as string]: `${RADAR_PERIOD}ms` }} role="group" aria-label={labels.hint}>
+    <div className={`radar ${compact ? "compact" : ""}`} style={{ width: RADAR_SIZE, height: RADAR_SIZE, ["--period" as string]: `${RADAR_PERIOD}ms` }} role="group" aria-label={labels.hint}>
       <div className="radar-disc" aria-hidden="true">
         <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`}>
           <defs>
@@ -239,12 +258,19 @@ export function Radar({ blips, labels }: { blips: { label: string; ms: number }[
             <i className="radar-dot" />
             <i className="radar-pulse" />
             <span className="radar-label" dir="ltr">
-              {b.label} <b className="tabular">{off ? labels.blocked : Math.max(1, b.ms + jitter)}</b>
+              {compact ? (
+                <b className="tabular">{(b.code ?? b.label).toUpperCase()}</b>
+              ) : (
+                <>
+                  {b.label} <b className="tabular">{off ? labels.blocked : Math.max(1, b.ms + jitter)}</b>
+                </>
+              )}
             </span>
           </button>
         );
       })}
 
+      {!compact && (
       <div className="radar-readout" aria-live="polite">
         <span className="radar-status">
           <i />
@@ -257,6 +283,7 @@ export function Radar({ blips, labels }: { blips: { label: string; ms: number }[
           {labels.best} <b dir="ltr">{best ? `${best.label} · ${best.ms} ms` : "—"}</b>
         </span>
       </div>
+      )}
     </div>
   );
 }
