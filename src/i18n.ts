@@ -74,6 +74,10 @@ export const en = {
     subtitle:
       "A working replica of the dropship window. Block servers, switch tabs, change the theme and language, collapse it. Nothing is installed and nothing is sent anywhere.",
     tip: "Left click blocks or allows a server. Right click keeps that server and flips all the others, exactly like the app.",
+    before: "How it was",
+    after: "How it's becoming",
+    beforeNote: "The current interface, as shipped today.",
+    afterNote: "The proposed new interface for the Arabic edition: an early, interactive concept. It will change.",
   },
   stats: {
     downloads: "Downloads",
@@ -322,6 +326,10 @@ export const ar: Dict = {
     subtitle:
       "نسخة طبق الأصل من نافذة dropship تشتغل هنا. احظر سيرفرات، بدّل التبويبات، غيّر المظهر واللغة، صغّرها. ما فيه شي يتثبّت ولا شي يُرسل لأي مكان.",
     tip: "الضغطة اليسرى تحظر السيرفر أو تسمح به. الضغطة اليمنى تبقي هذا السيرفر وتعكس كل الباقي، بالضبط مثل البرنامج.",
+    before: "كيف كان",
+    after: "كيف صار",
+    beforeNote: "الواجهة الحالية كما هي في البرنامج اليوم.",
+    afterNote: "الواجهة الجديدة المقترحة للنسخة العربية: تصميم أولي تفاعلي، وبيتغير.",
   },
   stats: {
     downloads: "تحميل",

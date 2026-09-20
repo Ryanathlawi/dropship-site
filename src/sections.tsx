@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { asset, Counter, DiscordIcon, GithubIcon, Kicker, Reveal, Spotlight, Tilt, XIcon } from "./components";
 import { Bars, Marquee, Radar, RotatingWord, SplitWords, Typewriter, Wordmark } from "./fx";
 import { AppReplica } from "./replica";
+import { AppReplica2 } from "./replica2";
 import type { Lang } from "./i18n";
 import { LINKS, asset as findAsset, mb, num, type Stats } from "./github";
 import { useT } from "./i18n";
@@ -378,6 +379,8 @@ export function Hero({ stats, theme }: { stats: Stats; theme: Theme }) {
 
 export function Playground({ theme }: { theme: Theme }) {
   const { t, lang } = useT();
+  const reduced = useReducedMotion();
+  const [view, setView] = useState<"before" | "after">("after");
   return (
     <section className="section playground" id="try">
       <div className="container">
@@ -389,7 +392,28 @@ export function Playground({ theme }: { theme: Theme }) {
           <p className="lead">{t.playground.subtitle}</p>
         </Reveal>
         <Reveal delay={0.15}>
-          <AppReplica siteLang={lang as Lang} siteTheme={theme} />
+          <div className="compare-head">
+            <div className="tabs" role="tablist">
+              {(["before", "after"] as const).map((k) => (
+                <button key={k} role="tab" aria-selected={view === k} className={`tab ${view === k ? "active" : ""}`} onClick={() => setView(k)}>
+                  {t.playground[k]}
+                  {view === k && <motion.span layoutId="compare-pill" className="tab-pill" transition={{ type: "spring", stiffness: 400, damping: 32 }} />}
+                </button>
+              ))}
+            </div>
+            <p className="compare-note">{view === "before" ? t.playground.beforeNote : t.playground.afterNote}</p>
+          </div>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={view}
+              initial={reduced ? false : { opacity: 0, y: 16, scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={reduced ? undefined : { opacity: 0, y: -12, scale: 0.99 }}
+              transition={{ duration: 0.3, ease: EASE }}
+            >
+              {view === "before" ? <AppReplica siteLang={lang as Lang} siteTheme={theme} /> : <AppReplica2 siteLang={lang as Lang} siteTheme={theme} />}
+            </motion.div>
+          </AnimatePresence>
           <p className="caption">{t.playground.tip}</p>
         </Reveal>
       </div>

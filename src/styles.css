@@ -1983,3 +1983,19 @@ p {
     width: auto;
   }
 }
+
+/* before / after switch */
+.compare-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.compare-head .tabs {
+  margin: 0;
+}
+.compare-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+}

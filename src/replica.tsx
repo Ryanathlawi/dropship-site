@@ -11,7 +11,7 @@ import "./replica.css";
 type RepTheme = "dark" | "light";
 type Tab = "welcome" | "log" | "help" | "options";
 
-const SERVERS = [
+export const SERVERS = [
   { name: "netherlands", code: "ams1", ms: 24 },
   { name: "brazil 2", code: "gru2", ms: 140 },
   { name: "finland 2", code: "hel2", ms: 38 },
@@ -25,7 +25,7 @@ const SERVERS = [
   { name: "taiwan", code: "tpe1", ms: 92 },
 ];
 
-const STR = {
+export const STR = {
   en: {
     title: "dropship",
     version: "v3.0.6",
