@@ -21,11 +21,11 @@ import {
   ToggleLeft,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { asset, Counter, DiscordIcon, GithubIcon, Kicker, Reveal, Spotlight, Tilt, XIcon } from "./components";
 import { Bars, Marquee, Radar, RotatingWord, SplitWords, Typewriter, Wordmark } from "./fx";
-import { AppReplica } from "./replica";
-import { AppReplica2 } from "./replica2";
+const AppReplica = lazy(() => import("./replica").then((m) => ({ default: m.AppReplica })));
+const AppReplica2 = lazy(() => import("./replica2").then((m) => ({ default: m.AppReplica2 })));
 import type { Lang } from "./i18n";
 import { LINKS, asset as findAsset, mb, num, type Stats } from "./github";
 import { useT } from "./i18n";
@@ -411,7 +411,9 @@ export function Playground({ theme }: { theme: Theme }) {
               exit={reduced ? undefined : { opacity: 0, y: -12, scale: 0.99 }}
               transition={{ duration: 0.3, ease: EASE }}
             >
-              {view === "before" ? <AppReplica siteLang={lang as Lang} siteTheme={theme} /> : <AppReplica2 siteLang={lang as Lang} siteTheme={theme} />}
+              <Suspense fallback={<div className="replica-skeleton" aria-hidden="true" />}>
+                {view === "before" ? <AppReplica siteLang={lang as Lang} siteTheme={theme} /> : <AppReplica2 siteLang={lang as Lang} siteTheme={theme} />}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
           <p className="caption">{t.playground.tip}</p>

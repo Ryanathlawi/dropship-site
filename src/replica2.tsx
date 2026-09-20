@@ -1,309 +1,447 @@
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowDownUp, Ban, ChevronsLeft, ChevronsRight, Crosshair, Globe, Heart, Moon, Settings2, Sparkles, Sun, Terminal } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowDownUp, Ban, ChevronsLeft, ChevronsRight, Globe, Heart, Map as MapIcon, Moon, Settings2, Sun, Terminal, Zap } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { asset } from "./components";
-import { Radar, Typewriter } from "./fx";
+import { Typewriter } from "./fx";
 import type { Lang } from "./i18n";
 import { SERVERS, STR } from "./replica";
+import { LAT_BOT, LAT_TOP, WORLD, WORLD_H, WORLD_W } from "./world";
 import "./replica2.css";
 
-/* proposed new interface for the arabic edition: a competitive-game hud. one window, angular panels,
-   a server map as the centrepiece, a target readout, and a console at the bottom */
+/* proposed new interface for the arabic edition, third take: a launcher. a living world map fills the
+   window, connections draw from you to every allowed server, the best one gets a lock, and glass panels
+   float on top. same data and behaviour as the app */
 
-type Tab = "welcome" | "log" | "help" | "options";
+type View = "map" | "log" | "help" | "settings";
 type RepTheme = "dark" | "light";
 
-const HUD = {
+const GEO: Record<string, [number, number]> = {
+  ams1: [52.37, 4.9],
+  gru2: [-23.55, -46.63],
+  hel2: [60.17, 24.94],
+  ruh1: [24.71, 46.68],
+  sin2: [1.35, 103.82],
+  nrt2: [35.68, 139.69],
+  ord1: [41.88, -87.63],
+  lax1: [34.05, -118.24],
+  gue4: [32.78, -96.8],
+  syd3: [-33.87, 151.21],
+  tpe1: [25.03, 121.57],
+};
+const YOU: [number, number] = [21.49, 39.19]; // jeddah
+
+const VB_W = WORLD_W * 10;
+const VB_H = WORLD_H * 10;
+const project = ([lat, lon]: [number, number]) => ({
+  x: ((lon + 180) / 360) * VB_W,
+  y: ((LAT_TOP - lat) / (LAT_TOP - LAT_BOT)) * VB_H,
+});
+
+const L = {
   en: {
     edition: "arabic edition · concept",
     filter: "filter",
-    online: "online",
-    standby: "standby",
-    blocked: (n: number) => `${n} blocked`,
+    on: "active",
+    off: "standby",
     game: "game",
-    detected: "detected",
-    idle: "not running",
-    target: "target lock",
+    running: "detected",
+    closed: "not running",
     servers: "servers",
-    sort: "sort by ping",
+    sort: "by ping",
     unblockAll: "unblock all",
-    mode: { always: "persistent", open: "session" },
-    map: "server map",
-    mapHint: "click a blip or a row to block",
     you: "you",
-    console: "console",
-    keys: { close: "close", toggle: "toggle", invert: "invert others" },
+    best: "best route",
+    via: "via",
+    mode: { always: "persistent", open: "session" },
+    views: { map: "map", log: "log", help: "help", settings: "settings" } as Record<View, string>,
+    lang: "language",
+    theme: "theme",
+    mini: "mini",
     foot: "original app by stormy · arabic edition by Ryan Athlawi",
+    keys: { close: "close", toggle: "toggle", invert: "invert others" },
+    blockedN: (n: number) => `${n} blocked`,
   },
   ar: {
     edition: "النسخة العربية · تصميم مقترح",
     filter: "الفلتر",
-    online: "شغّال",
-    standby: "متوقف",
-    blocked: (n: number) => (n === 0 ? "بدون حظر" : n === 1 ? "سيرفر محظور" : n === 2 ? "سيرفران محظوران" : `${n} محظورة`),
+    on: "شغّال",
+    off: "متوقف",
     game: "اللعبة",
-    detected: "مكتشفة",
-    idle: "مغلقة",
-    target: "الهدف",
+    running: "مكتشفة",
+    closed: "مغلقة",
     servers: "السيرفرات",
-    sort: "رتّب حسب البنق",
+    sort: "حسب البنق",
     unblockAll: "ارفع كل الحظر",
-    mode: { always: "دائم", open: "أثناء التشغيل" },
-    map: "خريطة السيرفرات",
-    mapHint: "اضغط نقطة أو صفًا للحظر",
     you: "أنت",
-    console: "الكونسول",
-    keys: { close: "إغلاق", toggle: "تبديل", invert: "عكس الباقي" },
+    best: "أفضل مسار",
+    via: "عبر",
+    mode: { always: "دائم", open: "أثناء التشغيل" },
+    views: { map: "الخريطة", log: "السجل", help: "المساعدة", settings: "الإعدادات" } as Record<View, string>,
+    lang: "اللغة",
+    theme: "المظهر",
+    mini: "مصغّر",
     foot: "البرنامج الأصلي من stormy · النسخة العربية من Ryan Athlawi",
+    keys: { close: "إغلاق", toggle: "تبديل", invert: "عكس الباقي" },
+    blockedN: (n: number) => (n === 0 ? "بدون حظر" : n === 1 ? "سيرفر محظور" : n === 2 ? "سيرفران محظوران" : `${n} محظورة`),
   },
 };
 
-const TAB_ICONS: Record<Tab, typeof Heart> = { welcome: Sparkles, log: Terminal, help: Heart, options: Settings2 };
+const VIEW_ICONS: Record<View, typeof Heart> = { map: MapIcon, log: Terminal, help: Heart, settings: Settings2 };
 const grade = (ms: number) => (ms < 50 ? "good" : ms < 100 ? "fair" : "poor");
+
+/** the dotted world, drawn once on a canvas (thousands of dots, zero dom) */
+function DotWorld({ light }: { light: boolean }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const dpr = Math.min(1.5, devicePixelRatio || 1); // plenty for dots, keeps the bitmap small
+    const w = VB_W;
+    const h = VB_H;
+    cv.width = w * dpr;
+    cv.height = h * dpr;
+    const ctx = cv.getContext("2d");
+    if (!ctx) return;
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+    const you = project(YOU);
+    for (let j = 0; j < WORLD_H; j++) {
+      const row = WORLD[j];
+      for (let i = 0; i < WORLD_W; i++) {
+        if (row[i] !== "1") continue;
+        const x = (i + 0.5) * 10;
+        const y = (j + 0.5) * 10;
+        const d = Math.hypot(x - you.x, y - you.y);
+        const near = Math.max(0, 1 - d / 700);
+        const a = (light ? 0.28 : 0.32) + near * 0.5;
+        ctx.fillStyle = light ? `rgba(0, 108, 53, ${a})` : `rgba(67, 209, 127, ${a})`;
+        ctx.beginPath();
+        ctx.arc(x, y, 2.6 + near * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }, [light]);
+  return <canvas ref={ref} className="lch-world" style={{ aspectRatio: `${VB_W} / ${VB_H}` }} aria-hidden="true" />;
+}
 
 export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme: RepTheme }) {
   const reduced = useReducedMotion();
   const [lang, setLang] = useState<Lang>(siteLang);
   const [themePref, setThemePref] = useState<"pc" | RepTheme>("pc");
   const [mini, setMini] = useState(false);
-  const [tab, setTab] = useState<Tab>("log");
-  const [blocked, setBlocked] = useState<Set<string>>(() => new Set(["usa - east 2", "usa - central"]));
+  const [view, setView] = useState<View>("map");
+  const [blocked, setBlocked] = useState<Set<string>>(() => new Set(["ord1", "gue4"]));
   const [sorted, setSorted] = useState(false);
   const [mode, setMode] = useState<"always" | "open">("always");
   const [gameOpen, setGameOpen] = useState(false);
+  const [hover, setHover] = useState<string | null>(null);
 
   useEffect(() => setLang(siteLang), [siteLang]);
   useEffect(() => {
     if (reduced) return;
-    const id = setInterval(() => setGameOpen((g) => !g), 9000); // pretend the game launches and quits
+    const id = setInterval(() => setGameOpen((g) => !g), 9000);
     return () => clearInterval(id);
   }, [reduced]);
 
   const theme: RepTheme = themePref === "pc" ? siteTheme : themePref;
   const s = STR[lang];
-  const h = HUD[lang];
+  const t = L[lang];
   const ar = lang === "ar";
 
-  const toggle = (name: string) =>
+  const toggle = (code: string) =>
     setBlocked((prev) => {
       const next = new Set(prev);
-      if (next.has(name)) next.delete(name);
-      else next.add(name);
+      if (next.has(code)) next.delete(code);
+      else next.add(code);
       return next;
     });
-  const invert = (name: string) =>
+  const invert = (code: string) =>
     setBlocked((prev) => {
       const next = new Set<string>();
-      for (const sv of SERVERS) if (sv.name !== name && !prev.has(sv.name)) next.add(sv.name);
-      if (prev.has(name)) next.add(name);
+      for (const sv of SERVERS) if (sv.code !== code && !prev.has(sv.code)) next.add(sv.code);
+      if (prev.has(code)) next.add(code);
       return next;
     });
 
   const list = sorted ? [...SERVERS].sort((a, b) => a.ms - b.ms) : SERVERS;
-  const best = SERVERS.filter((sv) => !blocked.has(sv.name)).sort((a, b) => a.ms - b.ms)[0];
+  const best = SERVERS.filter((sv) => !blocked.has(sv.code)).sort((a, b) => a.ms - b.ms)[0];
   const maxMs = Math.max(...SERVERS.map((sv) => sv.ms));
+  const you = project(YOU);
+
+  const arc = (code: string) => {
+    const p = project(GEO[code]);
+    const mx = (you.x + p.x) / 2;
+    const my = (you.y + p.y) / 2 - Math.hypot(p.x - you.x, p.y - you.y) * 0.22;
+    return `M ${you.x} ${you.y} Q ${mx} ${my} ${p.x} ${p.y}`;
+  };
 
   return (
-    <div className={`hud hud-${theme} ${mini ? "mini" : ""}`} dir={ar ? "rtl" : "ltr"} lang={lang}>
-      <div className="hud-grid" aria-hidden="true" />
-      <header className="hud-top">
-        <div className="hud-brand">
-          <span className="hud-mark">
-            <img src={asset("img/white-bolts.png")} alt="" width={14} height={14} />
-          </span>
-          <b>DROPSHIP</b>
-          <span className="hud-tag">v4.0 · {h.edition}</span>
-        </div>
-        <div className="hud-status" role="status">
-          <span className={`hud-led ${blocked.size ? "on" : ""}`} />
-          <span className="hud-k">{h.filter}</span>
-          <b>{blocked.size ? h.online : h.standby}</b>
-          <span className="hud-sep" />
-          <span className="hud-k">{h.blocked(blocked.size)}</span>
-          <span className="hud-sep" />
-          <span className="hud-k">{h.game}</span>
-          <b className={gameOpen ? "hot" : ""}>{gameOpen ? h.detected : h.idle}</b>
-        </div>
-        <div className="hud-quick">
-          <button onClick={() => setLang(ar ? "en" : "ar")} aria-label="language">
-            <Globe size={13} />
-            <span>{ar ? "EN" : "ع"}</span>
-          </button>
-          <button onClick={() => setThemePref(theme === "dark" ? "light" : "dark")} aria-label="theme">
-            {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
-          </button>
-          <button onClick={() => setMini((m) => !m)} aria-label="mini" aria-pressed={mini}>
-            {mini === ar ? <ChevronsLeft size={13} /> : <ChevronsRight size={13} />}
-          </button>
-        </div>
-      </header>
-
-      <div className="hud-body">
-        {!mini && (
-          <section className="hud-map">
-            <div className="hud-corners" aria-hidden="true" />
-            <div className="hud-map-head">
-              <span className="hud-k">{h.map}</span>
-              <span className="hud-k faint">{h.mapHint}</span>
-            </div>
-            <div className="hud-map-body">
-              <Radar
-                blips={SERVERS.map((sv) => ({ label: sv.name, ms: sv.ms, code: sv.code }))}
-                labels={{ you: h.you, scanning: h.filter, best: h.target, servers: h.servers, blocked: h.blocked(1), hint: h.mapHint }}
-                blocked={blocked}
-                onToggle={toggle}
-                compact
-                size={330}
-              />
-            </div>
-            <div className="hud-target">
-              <span className="hud-k">
-                <Crosshair size={13} />
-                {h.target}
-              </span>
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.b key={best?.code ?? "-"} dir="ltr" initial={reduced ? false : { y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={reduced ? undefined : { y: -10, opacity: 0 }} transition={{ duration: 0.2 }}>
-                  {best ? best.name : "—"}
-                </motion.b>
-              </AnimatePresence>
-              <span className="hud-target-ms tabular">
-                {best ? best.ms : "--"}
-                <small>ms</small>
-              </span>
-              <span className="hud-target-code tabular">{best?.code ?? ""}</span>
-              <div className="hud-seg">
-                {(["always", "open"] as const).map((m) => (
-                  <button key={m} className={mode === m ? "active" : ""} onClick={() => setMode(m)}>
-                    {h.mode[m]}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        <aside className="hud-list">
-          <div className="hud-corners" aria-hidden="true" />
-          <div className="hud-list-head">
-            <span className="hud-k">
-              {h.servers} <b className="tabular">{SERVERS.length - blocked.size}/{SERVERS.length}</b>
-            </span>
-            <button className={`hud-btn ${sorted ? "on" : ""}`} onClick={() => setSorted((x) => !x)} aria-pressed={sorted} title={h.sort}>
-              <ArrowDownUp size={12} />
-              <span>{h.sort}</span>
-            </button>
-          </div>
-          <ul>
-            {list.map((sv) => {
-              const off = blocked.has(sv.name);
-              const isBest = best?.name === sv.name;
-              return (
-                <motion.li key={sv.code} layout transition={{ type: "spring", stiffness: 500, damping: 40 }}>
-                  <button
-                    className={`hud-row ${off ? "off" : ""} ${isBest ? "best" : ""} ${grade(sv.ms)}`}
-                    onClick={() => toggle(sv.name)}
-                    onContextMenu={(e) => {
-                      e.preventDefault();
-                      invert(sv.name);
-                    }}
-                    aria-pressed={off}
-                  >
-                    <i className="hud-row-edge" />
-                    <span className="hud-code tabular">{sv.code}</span>
-                    <span className="hud-name" dir="ltr">
-                      {sv.name}
-                    </span>
-                    <span className="hud-bar" aria-hidden="true">
-                      <i style={{ width: `${(sv.ms / maxMs) * 100}%` }} />
-                    </span>
-                    <span className="hud-ms tabular">
-                      {sv.ms}
-                      <small>ms</small>
-                    </span>
-                    <span className="hud-state" aria-hidden="true">
-                      {off ? <Ban size={13} /> : <i className="hud-tick" />}
-                    </span>
-                  </button>
-                </motion.li>
-              );
-            })}
-          </ul>
-          <button className="hud-btn wide" onClick={() => setBlocked(new Set())}>
-            <Ban size={12} />
-            <span>{h.unblockAll}</span>
-          </button>
-        </aside>
+    <div className={`lch lch-${theme} ${mini ? "mini" : ""}`} dir={ar ? "rtl" : "ltr"} lang={lang}>
+      {/* backdrop: mesh + dotted world + connections */}
+      <div className="lch-mesh" aria-hidden="true" />
+      <div className="lch-map" aria-hidden={mini}>
+        <DotWorld light={theme === "light"} />
+        <svg className="lch-net" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet">
+          {SERVERS.filter((sv) => !blocked.has(sv.code)).map((sv) => (
+            <path key={sv.code} d={arc(sv.code)} className={`lch-arc ${best?.code === sv.code ? "best" : ""} ${hover === sv.code ? "hot" : ""}`} />
+          ))}
+          <g className="lch-you" transform={`translate(${you.x} ${you.y})`}>
+            <circle r="26" className="lch-you-ring" />
+            <circle r="14" className="lch-halo" />
+            <circle r="7" className="lch-you-dot" />
+            <text y="44" textAnchor="middle" className="lch-you-label">
+              {t.you}
+            </text>
+          </g>
+          {SERVERS.map((sv) => {
+            const p = project(GEO[sv.code]);
+            const off = blocked.has(sv.code);
+            const isBest = best?.code === sv.code;
+            return (
+              <g
+                key={sv.code}
+                transform={`translate(${p.x} ${p.y})`}
+                className={`lch-node ${off ? "off" : ""} ${isBest ? "best" : ""} ${hover === sv.code ? "hot" : ""} ${grade(sv.ms)}`}
+                onClick={() => toggle(sv.code)}
+                onMouseEnter={() => setHover(sv.code)}
+                onMouseLeave={() => setHover(null)}
+                role="button"
+                tabIndex={0}
+                aria-pressed={off}
+                aria-label={`${sv.name} ${sv.ms} ms`}
+              >
+                {isBest && <circle r="22" className="lch-lock" />}
+                <circle r="16" className="lch-hit" />
+                <circle r="12" className="lch-halo" />
+                <circle r="6" className="lch-dot" />
+                <text x={p.x > VB_W * 0.8 ? -14 : 14} y="5" textAnchor={p.x > VB_W * 0.8 ? "end" : "start"} className="lch-node-label">
+                  {sv.name}
+                  <tspan className="lch-node-ms"> {sv.ms}</tspan>
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+        <div className="lch-scan" aria-hidden="true" />
       </div>
 
-      {!mini && (
-        <section className="hud-console">
-          <div className="hud-tabs" role="tablist">
-            <span className="hud-k">{h.console}</span>
-            {(Object.keys(s.tabs) as Tab[]).map((k) => {
-              const Icon = TAB_ICONS[k];
-              return (
-                <button key={k} role="tab" aria-selected={tab === k} className={tab === k ? "active" : ""} onClick={() => setTab(k)}>
-                  <Icon size={12} />
-                  {s.tabs[k]}
+      {/* chrome */}
+      <header className="lch-top">
+        <div className="lch-brand">
+          <span className="lch-logo">
+            <img src={asset("img/white-bolts.png")} alt="" width={16} height={16} />
+          </span>
+          <b>dropship</b>
+          <span className="lch-ver">v4.0 · {t.edition}</span>
+        </div>
+        <div className="lch-chips">
+          <span className={`lch-chip ${blocked.size ? "on" : ""}`}>
+            <i />
+            {t.filter} · {blocked.size ? t.on : t.off} · {t.blockedN(blocked.size)}
+          </span>
+          <span className={`lch-chip ${gameOpen ? "gold" : ""}`}>
+            <i />
+            {t.game} · {gameOpen ? t.running : t.closed}
+          </span>
+        </div>
+        <span className="lch-win" aria-hidden="true">
+          <i>–</i>
+          <i>☐</i>
+          <i>✕</i>
+        </span>
+      </header>
+
+      <nav className="lch-rail" aria-label="views">
+        {(Object.keys(t.views) as View[]).map((k) => {
+          const Icon = VIEW_ICONS[k];
+          return (
+            <button key={k} className={view === k ? "active" : ""} onClick={() => setView(k)} title={t.views[k]} aria-label={t.views[k]} aria-pressed={view === k}>
+              <Icon size={18} />
+              {view === k && <motion.i layoutId="lch-rail-pill" className="lch-rail-pill" transition={{ type: "spring", stiffness: 400, damping: 32 }} />}
+            </button>
+          );
+        })}
+        <span className="lch-rail-gap" />
+        <button onClick={() => setLang(ar ? "en" : "ar")} title={t.lang} aria-label={t.lang}>
+          <Globe size={18} />
+        </button>
+        <button onClick={() => setThemePref(theme === "dark" ? "light" : "dark")} title={t.theme} aria-label={t.theme}>
+          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+        <button onClick={() => setMini((m) => !m)} title={t.mini} aria-label={t.mini} aria-pressed={mini}>
+          {mini === ar ? <ChevronsLeft size={18} /> : <ChevronsRight size={18} />}
+        </button>
+      </nav>
+
+      <aside className="lch-panel">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={view} className="lch-panel-in" initial={reduced ? false : { opacity: 0, x: ar ? -16 : 16 }} animate={{ opacity: 1, x: 0 }} exit={reduced ? undefined : { opacity: 0, x: ar ? 16 : -16 }} transition={{ duration: 0.22 }}>
+            {view === "map" && (
+              <>
+                <div className="lch-panel-head">
+                  <h4>
+                    {t.servers} <span className="lch-count tabular">{SERVERS.length - blocked.size}/{SERVERS.length}</span>
+                  </h4>
+                  <button className={`lch-sort ${sorted ? "on" : ""}`} onClick={() => setSorted((x) => !x)} aria-pressed={sorted}>
+                    <ArrowDownUp size={13} />
+                    {t.sort}
+                  </button>
+                </div>
+                <ul className="lch-list">
+                  {list.map((sv) => {
+                    const off = blocked.has(sv.code);
+                    const isBest = best?.code === sv.code;
+                    return (
+                      <motion.li key={sv.code} layout transition={{ type: "spring", stiffness: 500, damping: 40 }}>
+                        <button
+                          className={`lch-row ${off ? "off" : ""} ${isBest ? "best" : ""} ${grade(sv.ms)}`}
+                          onClick={() => toggle(sv.code)}
+                          onContextMenu={(e) => {
+                            e.preventDefault();
+                            invert(sv.code);
+                          }}
+                          onMouseEnter={() => setHover(sv.code)}
+                          onMouseLeave={() => setHover(null)}
+                          aria-pressed={off}
+                        >
+                          <span className="lch-code tabular">{sv.code}</span>
+                          <span className="lch-name-wrap">
+                            <span className="lch-name" dir="ltr">
+                              {sv.name}
+                            </span>
+                            <span className="lch-bar">
+                              <i style={{ width: `${(sv.ms / maxMs) * 100}%` }} />
+                            </span>
+                          </span>
+                          <span className="lch-ms tabular">
+                            {sv.ms}
+                            <small>ms</small>
+                          </span>
+                          <span className={`lch-switch ${off ? "" : "on"}`} aria-hidden="true">
+                            <i />
+                          </span>
+                        </button>
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+                <button className="lch-ghost" onClick={() => setBlocked(new Set())}>
+                  <Ban size={14} />
+                  {t.unblockAll}
                 </button>
-              );
-            })}
-          </div>
-          <div className="hud-console-body" role="tabpanel">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div key={tab} initial={reduced ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={reduced ? undefined : { opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
-                {tab === "welcome" && (
-                  <div className="hud-news">
-                    <div className="hud-news-head">
-                      <b>{s.welcome.title}</b>
-                      <span className="tabular">{s.welcome.date}</span>
-                    </div>
-                    <p>{s.welcome.intro}</p>
-                    <ul>
-                      {s.welcome.bullets.map((b) => (
-                        <li key={b}>{b}</li>
+              </>
+            )}
+            {view === "log" && (
+              <>
+                <div className="lch-panel-head">
+                  <h4>{s.tabs.log}</h4>
+                </div>
+                <div className="lch-console">
+                  <Typewriter lines={s.log} speed={18} loopPause={6000} />
+                </div>
+              </>
+            )}
+            {view === "help" && (
+              <>
+                <div className="lch-panel-head">
+                  <h4>{s.tabs.help}</h4>
+                </div>
+                <div className="lch-help">
+                  {s.help.map(([text, href]) => (
+                    <a key={text} href={href} target="_blank" rel="noreferrer">
+                      <span>{text}</span>
+                      <small dir="ltr">{href}</small>
+                    </a>
+                  ))}
+                </div>
+                <div className="lch-news">
+                  <div className="lch-news-head">
+                    <b>{s.welcome.title}</b>
+                    <span className="tabular">{s.welcome.date}</span>
+                  </div>
+                  <ul>
+                    {s.welcome.bullets.map((b) => (
+                      <li key={b}>
+                        <Zap size={12} />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            )}
+            {view === "settings" && (
+              <>
+                <div className="lch-panel-head">
+                  <h4>{s.tabs.options}</h4>
+                </div>
+                <div className="lch-settings">
+                  <label className="lch-setting">
+                    <span>{s.options.block}</span>
+                    <span className="lch-seg">
+                      {(["always", "open"] as const).map((m) => (
+                        <button key={m} className={mode === m ? "active" : ""} onClick={() => setMode(m)}>
+                          {t.mode[m]}
+                        </button>
                       ))}
-                    </ul>
+                    </span>
+                  </label>
+                  {[s.options.openLog, s.options.noBg].map((o, i) => (
+                    <label key={o} className="lch-setting">
+                      <span>{o}</span>
+                      <span className={`lch-switch ${i === 0 ? "on" : ""}`} aria-hidden="true">
+                        <i />
+                      </span>
+                    </label>
+                  ))}
+                  <div className="lch-setting-btns">
+                    <button className="lch-ghost small">{s.options.export}</button>
+                    <button className="lch-ghost small">{s.options.wipe}</button>
+                    <button className="lch-ghost small">{s.options.flush}</button>
                   </div>
-                )}
-                {tab === "log" && <Typewriter lines={s.log} speed={18} loopPause={6000} />}
-                {tab === "help" && (
-                  <div className="hud-help">
-                    {s.help.map(([text, href]) => (
-                      <a key={text} href={href} target="_blank" rel="noreferrer">
-                        <span>{text}</span>
-                        <small dir="ltr">{href}</small>
-                      </a>
-                    ))}
-                  </div>
-                )}
-                {tab === "options" && (
-                  <div className="hud-options">
-                    {[s.options.openLog, s.options.noBg].map((o) => (
-                      <label key={o} className="hud-opt">
-                        <input type="checkbox" defaultChecked={o === s.options.openLog} />
-                        <span>{o}</span>
-                      </label>
-                    ))}
-                    <div className="hud-opt-btns">
-                      <button className="hud-btn">{s.options.export}</button>
-                      <button className="hud-btn">{s.options.wipe}</button>
-                      <button className="hud-btn">{s.options.flush}</button>
-                    </div>
-                  </div>
-                )}
-              </motion.div>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </aside>
+
+      {!mini && (
+        <div className="lch-route">
+          <span className="lch-route-k">{t.best}</span>
+          <div className="lch-route-line">
+            <span className="lch-route-you">{t.you}</span>
+            <span className="lch-route-arrow" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.b key={best?.code ?? "-"} dir="ltr" initial={reduced ? false : { y: 8, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={reduced ? undefined : { y: -8, opacity: 0 }} transition={{ duration: 0.2 }}>
+                {best?.name ?? "—"}
+              </motion.b>
             </AnimatePresence>
           </div>
-        </section>
+          <div className="lch-route-ms">
+            <span className="tabular">{best?.ms ?? "--"}</span>
+            <small>ms · {best?.code ?? ""}</small>
+          </div>
+          <div className="lch-seg">
+            {(["always", "open"] as const).map((m) => (
+              <button key={m} className={mode === m ? "active" : ""} onClick={() => setMode(m)}>
+                {t.mode[m]}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
 
-      <footer className="hud-foot">
-        <span className="hud-k faint">{h.foot}</span>
-        <span className="hud-keys">
-          <kbd>esc</kbd> {h.keys.close}
-          <kbd>LMB</kbd> {h.keys.toggle}
-          <kbd>RMB</kbd> {h.keys.invert}
+      <footer className="lch-foot">
+        <span>{t.foot}</span>
+        <span className="lch-keys">
+          <kbd>esc</kbd> {t.keys.close}
+          <kbd>LMB</kbd> {t.keys.toggle}
+          <kbd>RMB</kbd> {t.keys.invert}
         </span>
       </footer>
     </div>

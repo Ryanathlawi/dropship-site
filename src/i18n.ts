@@ -77,7 +77,7 @@ export const en = {
     before: "How it was",
     after: "How it's becoming",
     beforeNote: "The current interface, as shipped today.",
-    afterNote: "The proposed new interface for the Arabic edition, styled like a competitive-game HUD. An interactive concept; it will change.",
+    afterNote: "The proposed new interface for the Arabic edition: a launcher with a living world map. An interactive concept; it will change.",
   },
   stats: {
     downloads: "Downloads",
@@ -329,7 +329,7 @@ export const ar: Dict = {
     before: "كيف كان",
     after: "كيف صار",
     beforeNote: "الواجهة الحالية كما هي في البرنامج اليوم.",
-    afterNote: "الواجهة الجديدة المقترحة للنسخة العربية بأسلوب HUD ألعاب تنافسية. تصميم تفاعلي أولي، وبيتغير.",
+    afterNote: "الواجهة الجديدة المقترحة للنسخة العربية: لانشر بخريطة عالم حيّة. تصميم تفاعلي أولي، وبيتغير.",
   },
   stats: {
     downloads: "تحميل",
