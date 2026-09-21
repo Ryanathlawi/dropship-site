@@ -12,6 +12,7 @@ export const en = {
     { text: "v3.0.6 is out: 9 MB, no installer, in-app updates", href: "#download" },
     { text: "The Arabic version is here, with a full right-to-left layout", href: "#download" },
     { text: "Something not working? Real people answer in the Discord", href: "https://discord.gg/QYrF8CVhbC" },
+    { text: "Like the Arabic edition? Support its development", href: "https://www.paypal.com/paypalme/RayanAthlawi" },
   ],
   nav: {
     features: "Features",
@@ -36,7 +37,7 @@ export const en = {
     ctaAr: "Arabic version",
     ctaGit: "View source",
     hint: "Windows 10 / 11 · a single .exe, no installer",
-    credits: "Original app by stormy · Arabic edition, guided tour and this site by Ryan Athlawi",
+    credits: "Arabic edition, launcher and this site by Ryan Athlawi · original app by stormy",
     chipAllowed: "allowed",
     chipBlocked: "blocked",
     chipLikely: "most likely to play on",
@@ -213,11 +214,12 @@ export const en = {
     title: "The people behind dropship.",
     stormyRole: "Creator of dropship",
     stormyText: "Wrote the original app from scratch and maintains it for the whole community.",
-    ryanRole: "Co-creator · Arabic edition, website & community",
+    ryanRole: "Developer of the Arabic edition · website & community",
     ryanText:
-      "Created the Arabic edition from the ground up (right-to-left layout, Thmanyah typography, the guided tour), designed and built this website, tracked down and fixed bugs, and brought dropship to the Arabic community.",
+      "Develops and maintains the Arabic edition: the launcher interface with its live world map, blocking presets, the guided tour, Thmanyah typography, this whole website and the Arabic community around it — built on stormy's dropship core under the same GPL-3.0.",
     contributors: "Contributors on GitHub",
     website: "Website",
+    support: "Support",
   },
   cta: {
     title: "Ready to choose your servers?",
@@ -246,10 +248,11 @@ export const en = {
   footer: {
     disclaimer:
       "Not affiliated with Blizzard Entertainment. Overwatch is a trademark of Blizzard Entertainment, Inc.",
-    made: "Original app by stormy · Arabic edition, guided tour and this website by Ryan Athlawi.",
+    made: "Arabic edition, launcher and this website by Ryan Athlawi · original app by stormy.",
     source: "Site source",
     discord: "Discord",
     issues: "Report an issue",
+    support: "Support the Arabic edition",
   },
 };
 
@@ -264,7 +267,8 @@ export const ar: Dict = {
   announce: [
     { text: "الإصدار 3.0.6 متوفر: 9 م.ب، بدون تثبيت، وتحديثات داخل البرنامج", href: "#download" },
     { text: "النسخة العربية وصلت، بتخطيط كامل من اليمين لليسار", href: "#download" },
-    { text: "شي ما يشتغل؟ ناس حقيقيين يردون عليك في الديسكورد", href: "https://discord.gg/QYrF8CVhbC" },
+    { text: "شي ما يشتغل؟ ناس حقيقيين يردون عليك في ديسكورد النسخة العربية", href: "https://discord.gg/H8sq6Uc3kA" },
+    { text: "أعجبتك النسخة العربية؟ ادعم استمرار تطويرها", href: "https://www.paypal.com/paypalme/RayanAthlawi" },
   ],
   nav: {
     features: "المميزات",
@@ -289,7 +293,7 @@ export const ar: Dict = {
     ctaAr: "النسخة الإنجليزية",
     ctaGit: "الكود المصدري",
     hint: "ويندوز 10 / 11 · ملف .exe واحد بدون تثبيت",
-    credits: "البرنامج الأصلي من stormy · النسخة العربية والجولة التعريفية وهذا الموقع من Ryan Athlawi",
+    credits: "النسخة العربية واللانشر وهذا الموقع من تطوير ريان العذلاوي · البرنامج الأصلي من stormy",
     chipAllowed: "مسموح",
     chipBlocked: "محظور",
     chipLikely: "على الأغلب بتلعب على",
@@ -466,11 +470,12 @@ export const ar: Dict = {
     title: "الناس اللي وراء dropship.",
     stormyRole: "مؤسس dropship",
     stormyText: "كتب البرنامج الأصلي من الصفر ويحافظ على تشغيله للمجتمع كله.",
-    ryanRole: "شريك مؤسس · النسخة العربية والموقع والمجتمع",
+    ryanRole: "مطوّر النسخة العربية · الموقع والمجتمع",
     ryanText:
-      "أسّس النسخة العربية من الصفر (التخطيط من اليمين لليسار، خط ثمانية، الجولة التعريفية)، صمّم وبنى هذا الموقع كاملًا، اكتشف أخطاء وصلّحها، وأوصل dropship للمجتمع العربي.",
+      "يطوّر النسخة العربية ويصونها: واجهة اللانشر بخريطة العالم الحيّة، اختصارات الحظر، الجولة التعريفية، خط ثمانية، هذا الموقع كاملًا، والمجتمع العربي حوله — مبنية على نواة dropship من stormy بنفس ترخيص GPL-3.0.",
     contributors: "المساهمون على GitHub",
     website: "الموقع",
+    support: "ادعم",
   },
   cta: {
     title: "جاهز تختار سيرفراتك؟",
@@ -499,10 +504,11 @@ export const ar: Dict = {
   footer: {
     disclaimer:
       "غير تابع لشركة Blizzard Entertainment. أوفرواتش علامة تجارية مسجلة لشركة Blizzard Entertainment, Inc.",
-    made: "البرنامج الأصلي من stormy · النسخة العربية والجولة التعريفية وهذا الموقع من Ryan Athlawi.",
+    made: "النسخة العربية واللانشر وهذا الموقع من تطوير ريان العذلاوي · البرنامج الأصلي من stormy.",
     source: "كود الموقع",
-    discord: "ديسكورد",
+    discord: "ديسكورد النسخة العربية",
     issues: "أبلغ عن مشكلة",
+    support: "ادعم التطوير",
   },
 };
 

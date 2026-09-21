@@ -8,6 +8,7 @@ import {
   Crosshair,
   Download,
   ExternalLink,
+  Heart,
   Gamepad2,
   Globe,
   Languages,
@@ -747,6 +748,8 @@ export function Team({ stats }: { stats: Stats }) {
       text: t.team.ryanText,
       links: [
         { href: LINKS.ryan, label: "GitHub", icon: <GithubIcon size={16} /> },
+        { href: LINKS.discordAr, label: "Discord", icon: <DiscordIcon size={16} /> },
+        { href: LINKS.paypal, label: t.team.support, icon: <Heart size={16} aria-hidden="true" /> },
         { href: LINKS.ryanSite, label: t.team.website, icon: <ExternalLink size={16} aria-hidden="true" /> },
       ],
     },
@@ -947,7 +950,9 @@ export function DownloadSection({ stats }: { stats: Stats }) {
 /* ------------------------------------------------------------- footer */
 
 export function Footer() {
-  const { t } = useT();
+  const { t, lang } = useT();
+  // the arabic site points at the arabic edition's own repo and community
+  const ar = lang === "ar";
   return (
     <footer className="footer">
       <div className="container">
@@ -959,14 +964,17 @@ export function Footer() {
             <span className="footer-made">{t.footer.made}</span>
           </div>
           <nav className="footer-links" aria-label="Footer">
-            <a href={LINKS.upstream} target="_blank" rel="noreferrer">
+            <a href={ar ? LINKS.ar : LINKS.upstream} target="_blank" rel="noreferrer">
               <GithubIcon size={16} /> GitHub
             </a>
-            <a href={LINKS.discord} target="_blank" rel="noreferrer">
+            <a href={ar ? LINKS.discordAr : LINKS.discord} target="_blank" rel="noreferrer">
               <DiscordIcon size={16} /> {t.footer.discord}
             </a>
-            <a href={LINKS.upstreamIssues} target="_blank" rel="noreferrer">
+            <a href={ar ? `${LINKS.ar}/issues` : LINKS.upstreamIssues} target="_blank" rel="noreferrer">
               {t.footer.issues}
+            </a>
+            <a href={LINKS.paypal} target="_blank" rel="noreferrer">
+              <Heart size={14} aria-hidden="true" /> {t.footer.support}
             </a>
             <a href={LINKS.site} target="_blank" rel="noreferrer">
               {t.footer.source}

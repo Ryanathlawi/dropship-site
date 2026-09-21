@@ -8,6 +8,8 @@ export const LINKS = {
   arReleases: "https://github.com/Ryanathlawi/dropship-ar/releases",
   site: "https://github.com/Ryanathlawi/dropship-site",
   discord: "https://discord.gg/QYrF8CVhbC",
+  discordAr: "https://discord.gg/H8sq6Uc3kA",
+  paypal: "https://www.paypal.com/paypalme/RayanAthlawi",
   stormy: "https://github.com/stowmyy",
   stormyX: "https://x.com/stormyy_ow",
   stormySite: "https://stormy.gg",
