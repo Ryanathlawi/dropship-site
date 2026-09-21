@@ -518,9 +518,27 @@
 @media (max-width: 900px) {
   .rep-body {
     flex-direction: column;
+    min-height: 0;
+  }
+  .rep-left {
+    flex: 0 0 auto; /* flex-basis 0 would collapse it to nothing in a column */
   }
   .rep-left-inner {
     min-width: 0;
+  }
+  .rep-tabs {
+    width: auto;
+    max-width: 100%;
+    margin-inline-start: 0;
+    flex-wrap: wrap;
+  }
+  .rep-panel {
+    margin-inline-start: 0;
+  }
+  .rep-exe {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .rep-right {
     flex-basis: auto;

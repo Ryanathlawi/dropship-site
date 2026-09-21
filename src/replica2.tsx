@@ -8,9 +8,9 @@ import { SERVERS, STR } from "./replica";
 import { LAT_BOT, LAT_TOP, WORLD, WORLD_H, WORLD_W } from "./world";
 import "./replica2.css";
 
-/* proposed new interface for the arabic edition, third take: a launcher. a living world map fills the
-   window, connections draw from you to every allowed server, the best one gets a lock, and glass panels
-   float on top. same data and behaviour as the app */
+/* the arabic edition's launcher interface (shipped in v3.1.0): a living world map fills the window,
+   connections draw from you to every allowed server, the best one gets a lock, and glass panels float
+   on top. same data and behaviour as the app. on phones the map becomes a strip you pan by finger */
 
 type View = "map" | "log" | "help" | "settings";
 type RepTheme = "dark" | "light";
@@ -48,7 +48,7 @@ const project = ([lat, lon]: [number, number]) => ({
 
 const L = {
   en: {
-    edition: "arabic edition · concept",
+    edition: "arabic edition",
     filter: "filter",
     on: "active",
     off: "standby",
@@ -73,7 +73,7 @@ const L = {
     blockedN: (n: number) => `${n} blocked`,
   },
   ar: {
-    edition: "النسخة العربية · تصميم مقترح",
+    edition: "النسخة العربية",
     filter: "الفلتر",
     on: "شغّال",
     off: "متوقف",
@@ -156,6 +156,13 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
     const id = setInterval(() => setGameOpen((g) => !g), 9000);
     return () => clearInterval(id);
   }, [reduced]);
+  // phones: the map is a horizontal strip; start it centred on the middle east / europe
+  const mapRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = mapRef.current;
+    if (!el || el.scrollWidth <= el.clientWidth) return;
+    el.scrollLeft = el.scrollWidth * 0.6 - el.clientWidth / 2;
+  }, [mini]);
 
   const theme: RepTheme = themePref === "pc" ? siteTheme : themePref;
   const s = STR[lang];
@@ -193,7 +200,7 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
     <div className={`lch lch-${theme} ${mini ? "mini" : ""}`} data-pal={pal} dir={ar ? "rtl" : "ltr"} lang={lang}>
       {/* backdrop: mesh + dotted world + connections */}
       <div className="lch-mesh" aria-hidden="true" />
-      <div className="lch-map" aria-hidden={mini}>
+      <div className="lch-map" aria-hidden={mini} ref={mapRef}>
         <DotWorld light={theme === "light"} rgb={DOTS[pal][theme]} />
         <svg className="lch-net" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet">
           {SERVERS.filter((sv) => !blocked.has(sv.code)).map((sv) => (
@@ -247,7 +254,7 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
             <img src={asset("img/white-bolts.png")} alt="" width={16} height={16} />
           </span>
           <b>dropship</b>
-          <span className="lch-ver">v4.0 · {t.edition}</span>
+          <span className="lch-ver">v3.1.0 · {t.edition}</span>
         </div>
         <div className="lch-chips">
           <span className={`lch-chip ${blocked.size ? "on" : ""}`}>

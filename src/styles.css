@@ -754,7 +754,7 @@ p {
 }
 @media (max-width: 560px) {
   .bento {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .bento-cell:nth-child(1),
   .bento-cell:nth-child(2),
@@ -1774,13 +1774,6 @@ p {
 @media (max-width: 1000px) {
   .bento-cell:nth-child(2) {
     grid-row: auto;
-  }
-}
-@media (max-width: 480px) {
-  .feat-radar-wrap {
-    transform: scale(0.82);
-    transform-origin: top center;
-    margin-bottom: -60px;
   }
 }
 

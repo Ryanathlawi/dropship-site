@@ -980,28 +980,138 @@
   margin-inline-start: 0;
 }
 
-@media (max-width: 900px) {
+/* ------------------------------------------------------------ phones
+   the desktop window becomes a stacked app: map strip you can pan with a
+   finger, the panel and the best-route card as full-width cards, and the
+   rail as a bottom tab bar. */
+@media (max-width: 720px) {
   .lch {
-    grid-template-columns: 48px 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 46px auto auto auto auto auto;
+    grid-template-areas:
+      "top"
+      "map"
+      "body"
+      "route"
+      "foot"
+      "rail";
     min-height: 0;
+    font-size: 13px;
+    border-radius: 14px;
+  }
+  .lch-top {
+    padding: 0 12px;
+    gap: 10px;
+  }
+  .lch-ver {
+    max-width: 44%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lch-chips,
+  .lch-win {
+    display: none;
   }
   .lch-map {
-    inset-inline-start: 48px;
     position: relative;
-    grid-area: body;
-    top: 0;
-    bottom: 0;
-    inset-inline: 0;
-    min-height: 220px;
+    grid-area: map;
+    inset: auto;
+    top: auto;
+    bottom: auto;
+    height: clamp(190px, 52vw, 240px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    direction: ltr; /* plain scroll maths in both languages; the strip is centred from code */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--l-line);
   }
-  .lch-panel,
-  .lch-route {
-    position: relative;
-    grid-area: auto;
-    justify-self: stretch;
-    width: auto;
-  }
-  .lch-chips {
+  .lch-map::-webkit-scrollbar {
     display: none;
+  }
+  .lch-world,
+  .lch-net {
+    left: 0;
+    top: 50%;
+    width: 200%;
+    transform: translateY(-50%);
+  }
+  .lch-world {
+    position: relative;
+  }
+  .lch-net {
+    position: absolute;
+  }
+  .lch-net text {
+    font-size: 24px;
+    stroke-width: 8px;
+  }
+  .lch-you-label {
+    font-size: 22px;
+  }
+  .lch-node-flag {
+    width: 44px;
+    height: 33px;
+  }
+  .lch-hit {
+    r: 34;
+  }
+  .lch-dot {
+    r: 9;
+  }
+  .lch-node.hot .lch-dot,
+  .lch-node:hover .lch-dot {
+    r: 12;
+  }
+  .lch-panel {
+    grid-area: body;
+    justify-self: stretch;
+    align-self: auto;
+    width: auto;
+    max-width: none;
+    margin: 10px 10px 0;
+  }
+  .lch-panel-in {
+    min-height: 0;
+  }
+  .lch-route {
+    grid-area: route;
+    justify-self: stretch;
+    align-self: auto;
+    margin: 10px 10px 0;
+    padding: 12px 14px;
+  }
+  .lch-foot {
+    padding: 8px 12px;
+    justify-content: center;
+    text-align: center;
+  }
+  .lch-keys {
+    display: none;
+  }
+  .lch-rail {
+    grid-area: rail;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-inline-end: 0;
+    border-top: 1px solid var(--l-line);
+  }
+  .lch-rail-gap {
+    display: none;
+  }
+  .lch-rail button {
+    width: 36px;
+    height: 36px;
+  }
+  .lch.mini {
+    grid-template-areas:
+      "top"
+      "body"
+      "foot"
+      "rail";
+    grid-template-rows: 46px auto auto auto;
   }
 }

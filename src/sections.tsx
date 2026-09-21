@@ -21,7 +21,7 @@ import {
   ToggleLeft,
   X,
 } from "lucide-react";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { asset, Counter, DiscordIcon, GithubIcon, Kicker, Reveal, Spotlight, Tilt, XIcon } from "./components";
 import { Bars, Marquee, Radar, RotatingWord, SplitWords, Typewriter, Wordmark } from "./fx";
 const AppReplica = lazy(() => import("./replica").then((m) => ({ default: m.AppReplica })));
@@ -380,7 +380,8 @@ export function Hero({ stats, theme }: { stats: Stats; theme: Theme }) {
 export function Playground({ theme }: { theme: Theme }) {
   const { t, lang } = useT();
   const reduced = useReducedMotion();
-  const [view, setView] = useState<"before" | "after">("after");
+  // ?view=before deep-links to the original interface
+  const [view, setView] = useState<"before" | "after">(() => (new URLSearchParams(window.location.search).get("view") === "before" ? "before" : "after"));
   return (
     <section className="section playground" id="try">
       <div className="container">
@@ -420,6 +421,25 @@ export function Playground({ theme }: { theme: Theme }) {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+/** the radar is laid out in pixels, so on narrow phones it shrinks to the card's width */
+function RadarCell({ labels }: { labels: ReturnType<typeof useT>["t"]["radar"] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState(360);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setSize(Math.min(360, Math.floor(e.contentRect.width))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  return (
+    <div className="feat-radar-wrap" ref={ref}>
+      <Radar blips={BLIPS} labels={labels} size={size} />
+      <span className="feat-radar-hint">{labels.hint}</span>
+    </div>
   );
 }
 
@@ -530,12 +550,7 @@ export function Features() {
                   </span>
                   <h3>{f.title}</h3>
                   <p>{f.text}</p>
-                  {i === 1 && (
-                    <div className="feat-radar-wrap">
-                      <Radar blips={BLIPS} labels={t.radar} />
-                      <span className="feat-radar-hint">{t.radar.hint}</span>
-                    </div>
-                  )}
+                  {i === 1 && <RadarCell labels={t.radar} />}
                 </Spotlight>
               </Reveal>
             );
