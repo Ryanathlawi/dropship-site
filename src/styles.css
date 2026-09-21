@@ -2021,7 +2021,7 @@ p {
 .diagram-frame img {
   display: block;
   width: 100%;
-  min-width: 1100px;
+  min-width: 1500px; /* readable text; the frame scrolls sideways, click opens it full size */
   height: auto;
 }
 .diagram-actions {
