@@ -471,7 +471,7 @@ export function Diagram({ theme }: { theme: Theme }) {
           <a className="diagram-frame" href={svg} target="_blank" rel="noreferrer" title={t.diagram.svg}>
             <picture>
               <source media="(max-width: 720px)" srcSet={svgMobile} />
-              <img src={svg} alt={t.diagram.title} width={1920} height={1400} loading="lazy" decoding="async" />
+              <img src={svg} alt={t.diagram.title} width={1920} height={1460} loading="lazy" decoding="async" />
             </picture>
           </a>
           <div className="diagram-actions">

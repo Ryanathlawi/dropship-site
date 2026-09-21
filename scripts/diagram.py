@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-"""مخطط المشروع الكامل بأسلوب هندسي: يولّد من نموذج واحد
-  - public/diagram/dropship-ar.drawio  (صفحتان: العربية والإنجليزية، الصور تُحمَّل من الموقع)
-  - public/diagram/architecture-{ar,en}-{light,dark}.svg  (الصور مضمّنة داخل الملف)
-  - public/diagram/thumbs/*  (مصغّرات الصور + خريطة المناطق) و public/diagram/icons/*.svg
-  - src/stages.json (المراحل للموقع)
+"""مراحل التطوير للموقع (src/stages.json ومصغّراتها) + أدوات مشتركة (أيقونات lucide، المصغّرات).
+
+المخطط الهندسي نفسه (SVG لكل لغة وثيم، الجوال، draw.io) يولّده scripts/diagram_map.py.
 
     python scripts/diagram.py
 """
@@ -735,34 +733,12 @@ def render_drawio(L, lang, page_id):
 
 # ------------------------------------------------------------------ main
 def main():
-    assets = {
-        "launcher": thumb("img/ar-main-dark.webp", "launcher", 560, 390),
-        "original": thumb("img/en-expanded.webp", "original", 270, 187),
-        "site": thumb("img/stage-site.webp", "site", 270, 142),
-        "phone": thumb("img/stage-phone.webp", "phone", 90, 162),
-        "stages": [thumb(src, f"stage-{i}", 120, 84) for i, (_, src, _) in enumerate(STAGES)],
-    }
-    pages = []
-    for lang in ("ar", "en"):
-        for theme in ("light", "dark"):
-            a = dict(assets)
-            a["regions"] = regions_map(theme)
-            a["regions_m"] = regions_map(theme, w=400, h=169, suffix="-m")
-            L = build(lang, a)
-            with open(os.path.join(OUT, f"architecture-{lang}-{theme}.svg"), "w", encoding="utf-8", newline="\n") as f:
-                f.write(render_svg(L, lang, theme))
-            Lm = build_mobile(lang, a)
-            with open(os.path.join(OUT, f"architecture-{lang}-{theme}-mobile.svg"), "w", encoding="utf-8", newline="\n") as f:
-                f.write(render_svg(Lm, lang, theme))
-            if theme == "light":
-                pages.append(render_drawio(L, lang, lang))
-    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n<mxfile host="dropship-site" modified="2026-09-21T00:00:00.000Z" agent="scripts/diagram.py" version="24.0.0" type="device">'
-           + "".join(pages) + "</mxfile>\n")
-    with open(os.path.join(OUT, "dropship-ar.drawio"), "w", encoding="utf-8", newline="\n") as f:
-        f.write(xml)
+    """المخطط نفسه صار يُولَّد من scripts/diagram_map.py — هذا يبقي مراحل الموقع (src/stages.json) ومصغّراتها"""
+    for i, (_, src, _) in enumerate(STAGES):
+        thumb(src, f"stage-{i}", 120, 84)
     with open(os.path.join(ROOT, "src", "stages.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump([{"date": d, "img": i, "ar": l["ar"], "en": l["en"]} for d, i, l in STAGES], f, ensure_ascii=False, indent=2)
-    print("wrote", OUT)
+    print("wrote", os.path.join(ROOT, "src", "stages.json"))
 
 
 if __name__ == "__main__":
