@@ -363,7 +363,7 @@ def build(lang, assets):
     L.edge("e5", [(1190, 410), (1225, 410), (1225, 400), (1290, 400)], tx("e_ping"), (1225, 378), dashed=True)
     L.edge("e6", [(1190, 687), (1290, 687)], tx("e_list"), (1242, 668), dashed=True)
     L.edge("e7", [(1190, 860), (1225, 860), (1225, 1040), (1652, 1040), (1652, 1022)], tx("e_update"), (1440, 1054), dashed=True)
-    L.edge("e8", [(1355, 850), (1355, 950)], tx("e_fork"), (1300, 932))
+    L.edge("e8", [(1355, 850), (1355, 950)], tx("e_fork"), (1420, 872))
     L.edge("e9", [(1425, 986), (1435, 986)], "", (0, 0))
     L.edge("e10", [(1570, 986), (1580, 986)], "", (0, 0))
     L.edge("e11", [(1715, 986), (1725, 986)], "", (0, 0))
@@ -493,7 +493,9 @@ def render_drawio(L, lang, page_id):
     rtl = L.rtl
     esc = lambda s: html.escape(s, quote=True)
     tdir = "textDirection=rtl;" if rtl else ""
-    align = "right" if rtl else "left"
+    # draw.io يعكس معنى align مع textDirection=rtl (وبدون whiteSpace=wrap يفيض النص خارج الصندوق)،
+    # فالمحاذاة إلى بداية السطر في الاتجاهين هي align=left مع لفّ النص دائمًا
+    align = "left"
     cells = ['<mxCell id="0"/>', '<mxCell id="1" parent="0"/>']
     P = page_id
     # الصور تُحمَّل من الموقع مع رقم نسخة حتى لا تعلق نسخة قديمة في كاش draw.io
@@ -507,7 +509,7 @@ def render_drawio(L, lang, page_id):
 
     vertex("hdr_logo", W - 90 if rtl else 30, 30, 60, 60, f"ellipse;fillColor={pal['accent']};strokeColor=none;")
     vertex("hdr_logo_i", W - 76 if rtl else 44, 44, 32, 32, f"shape=image;image={write_icon_file('zap', 'ffffff')};")
-    vertex("hdr", W - 1310 if rtl else 110, 30, 1200, 60, f"text;html=1;align={align};verticalAlign=middle;fontSize=22;fontColor={pal['text']};{tdir}",
+    vertex("hdr", W - 1310 if rtl else 110, 30, 1200, 60, f"text;html=1;whiteSpace=wrap;align={align};verticalAlign=middle;fontSize=22;fontColor={pal['text']};{tdir}",
            f"<b>{TXT['title'][lang]}</b><br><font style=\"font-size:12px\" color=\"{pal['muted']}\">{TXT['subtitle'][lang]}</font>")
     offset = 0
     for i, c in enumerate(TXT["chips"][lang][::-1]):
@@ -541,7 +543,7 @@ def render_drawio(L, lang, page_id):
         elif kind == "image":
             vertex(it["key"], it["x"], it["y"], it["w"], it["h"], f"shape=image;imageAspect=0;image={SITE}diagram/{it['src']}{img_v};rounded=1;strokeColor={pal['shot_line']};shadow=1;")
             if it["caption"]:
-                vertex(it["key"] + "_c", it["x"], it["y"] + it["h"] + 4, it["w"], 20, f"text;html=1;align={align};verticalAlign=top;fontSize=10;fontColor={pal['muted']};{tdir}", it["caption"])
+                vertex(it["key"] + "_c", it["x"], it["y"] + it["h"] + 4, it["w"], 20, f"text;html=1;whiteSpace=wrap;align={align};verticalAlign=top;fontSize=10;fontColor={pal['muted']};{tdir}", it["caption"])
         elif kind == "callout":
             vertex(it["key"], it["x"] - 11, it["y"] - 11, 22, 22, f"ellipse;fillColor={pal['gold']};strokeColor=#ffffff;strokeWidth=2;fontColor=#ffffff;fontStyle=1;fontSize=11;fontFamily=Consolas;", str(it["n"]))
         elif kind == "text":
@@ -570,8 +572,8 @@ def render_drawio(L, lang, page_id):
         add(f'<mxCell id="{it["key"]}_{P}" value="{esc(it["label"])}" style="{style}" edge="1" parent="1"><mxGeometry relative="1" as="geometry">'
             f'<mxPoint x="{pts[0][0]:.0f}" y="{pts[0][1]:.0f}" as="sourcePoint"/><mxPoint x="{pts[-1][0]:.0f}" y="{pts[-1][1]:.0f}" as="targetPoint"/>'
             + (f'<Array as="points">{inner}</Array>' if inner else "") + "</mxGeometry></mxCell>")
-    vertex("legend", 40, 1322, 1840, 22, f"text;html=1;align={align};fontSize=11;fontColor={pal['muted']};{tdir}", TXT["legend"][lang])
-    vertex("credit", 40, 1346, 1840, 22, f"text;html=1;align={align};fontSize=11;fontColor={pal['faint']};{tdir}", TXT["credit"][lang])
+    vertex("legend", 40, 1322, 1840, 22, f"text;html=1;whiteSpace=wrap;align={align};fontSize=11;fontColor={pal['muted']};{tdir}", TXT["legend"][lang])
+    vertex("credit", 40, 1346, 1840, 22, f"text;html=1;whiteSpace=wrap;align={align};fontSize=11;fontColor={pal['faint']};{tdir}", TXT["credit"][lang])
     name = "العربية" if rtl else "English"
     return (f'<diagram id="{P}" name="{name}"><mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" '
             f'page="1" pageScale="1" pageWidth="{W}" pageHeight="{H}" background="{pal["bg"]}" math="0" shadow="0"><root>{"".join(cells)}</root></mxGraphModel></diagram>')
