@@ -2010,19 +2010,27 @@ p {
 
 /* -------------------------------------------------------- project map + stages */
 .diagram-frame {
+  /* edge to edge (up to the drawing's own 1920px) so the text stays readable; click opens it full size */
+  --dw: min(100vw - 32px, 1920px);
   display: block;
+  width: var(--dw);
+  margin-inline-start: calc(50% - var(--dw) / 2);
   cursor: zoom-in;
-  overflow: auto;
   border: 1px solid var(--border);
   border-radius: 18px;
+  overflow: hidden;
   background: var(--surface);
-  -webkit-overflow-scrolling: touch;
 }
 .diagram-frame img {
   display: block;
   width: 100%;
-  min-width: 1500px; /* readable text; the frame scrolls sideways, click opens it full size */
   height: auto;
+}
+@media (max-width: 720px) {
+  .diagram-frame {
+    --dw: 100%;
+    margin-inline-start: 0;
+  }
 }
 .diagram-actions {
   display: flex;

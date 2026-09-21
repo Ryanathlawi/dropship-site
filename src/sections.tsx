@@ -453,6 +453,7 @@ const DRAWIO_FILE = "diagram/dropship-ar.drawio";
 export function Diagram({ theme }: { theme: Theme }) {
   const { t, lang } = useT();
   const svg = asset(`diagram/architecture-${lang}-${theme}.svg`);
+  const svgMobile = asset(`diagram/architecture-${lang}-${theme}-mobile.svg`);
   // draw.io opens a file straight from a URL (#U…); GitHub Pages sends the CORS header it needs
   const drawioUrl = `https://app.diagrams.net/#U${encodeURIComponent(new URL(asset(DRAWIO_FILE), window.location.href).href)}`;
   return (
@@ -466,8 +467,12 @@ export function Diagram({ theme }: { theme: Theme }) {
           <p className="lead">{t.diagram.subtitle}</p>
         </Reveal>
         <Reveal delay={0.1}>
+          {/* phones get a one-column layout of the same map; wider screens the full blueprint, edge to edge */}
           <a className="diagram-frame" href={svg} target="_blank" rel="noreferrer" title={t.diagram.svg}>
-            <img src={svg} alt={t.diagram.title} width={1720} height={1150} loading="lazy" decoding="async" />
+            <picture>
+              <source media="(max-width: 720px)" srcSet={svgMobile} />
+              <img src={svg} alt={t.diagram.title} width={1920} height={1400} loading="lazy" decoding="async" />
+            </picture>
           </a>
           <div className="diagram-actions">
             <a className="btn btn-primary btn-sm" href={drawioUrl} target="_blank" rel="noreferrer">

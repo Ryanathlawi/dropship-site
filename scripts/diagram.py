@@ -121,7 +121,7 @@ REGIONS = [  # (code, lat, lon)
 YOU = (24.7, 46.7)
 
 
-def regions_map(theme, w=560, h=236):
+def regions_map(theme, w=560, h=236, suffix=""):
     """خريطة العالم المنقّطة مع المناطق ومسارات منك إليها، من قناع src/world.ts"""
     src = open(os.path.join(ROOT, "src", "world.ts"), encoding="utf-8").read()
     rows = re.findall(r'"([01]{180})"', src)
@@ -163,9 +163,9 @@ def regions_map(theme, w=560, h=236):
         d.rectangle((tx - 4, y - 9, tx + tw + 4, y + 9), fill=bg)
         d.text((tx, y - 8), code, font=font, fill=(238, 244, 246) if theme == "dark" else (11, 18, 32))
     d.ellipse((yx - 6, yy - 6, yx + 6, yy + 6), fill=(255, 255, 255) if theme == "dark" else (11, 18, 32))
-    path = os.path.join(THUMBS, f"regions-{theme}.png")
+    path = os.path.join(THUMBS, f"regions-{theme}{suffix}.png")
     im.save(path, optimize=True)
-    return f"thumbs/regions-{theme}.png", base64.b64encode(open(path, "rb").read()).decode()
+    return f"thumbs/regions-{theme}{suffix}.png", base64.b64encode(open(path, "rb").read()).decode()
 
 
 # ------------------------------------------------------------------ المحتوى
@@ -229,6 +229,16 @@ TXT = {
     "subtitle": T("كيف يشتغل البرنامج من اللعبة إلى السيرفر، وما بُني حوله — تطوير ريان الأثلاوي، مبني على dropship من stormy",
                   "How the app works from the game to the server, and everything built around it — developed by Ryan Athlawi, built on dropship by stormy"),
     "chips": T([VERSION, "GPL-3.0", "Rust · egui 0.36", "Windows 10/11"], [VERSION, "GPL-3.0", "Rust · egui 0.36", "Windows 10/11"]),
+    "title_short": T("dropship — المخطط الهندسي", "dropship — engineering map"),
+    "subtitle_short": T("النسخة العربية · تطوير ريان الأثلاوي · مبني على dropship من stormy", "Arabic edition · Ryan Athlawi · built on dropship by stormy"),
+    "app_short": T(f"dropship {VERSION} · Rust · egui · tokio", f"dropship {VERSION} · Rust · egui · tokio"),
+    "regions_short": T("11 منطقة من ips.json — الذهبي أقرب واحدة لك", "11 regions from ips.json — gold = nearest to you"),
+    "legend_short": T("الأسهم: تدفق · المتقطّع: دوري · الأرقام الذهبية تشرح الواجهة", "arrows: flow · dashed: periodic · gold numbers explain the UI"),
+    "n_allowed": T("◀ من جدار الحماية: المناطق المسموحة فقط تمرّ", "◀ from the firewall: only allowed regions get through"),
+    "n_ping": T("◀ من البرنامج: ping كل 15 ث", "◀ from the app: ping every 15 s"),
+    "n_list": T("▶ إلى البرنامج: قائمة السيرفرات كل 15 د", "▶ to the app: the server list every 15 min"),
+    "n_fork": T("▲ fork من الأصل · GPL-3.0", "▲ forked from upstream · GPL-3.0"),
+    "n_update": T("▶ إلى البرنامج: تحديث؟ كل 2.5 س", "▶ to the app: update? every 2.5 h"),
     "z_pc": T("01 · جهاز اللاعب", "01 · Player's PC"),
     "z_bliz": T("02 · Blizzard والإنترنت", "02 · Blizzard & the internet"),
     "z_up": T("03 · الأصل — stormy", "03 · Upstream — stormy"),
@@ -238,6 +248,8 @@ TXT = {
     "ow": T(["Overwatch 2", "Overwatch.exe عبر Battle.net أو Steam"], ["Overwatch 2", "Overwatch.exe via Battle.net or Steam"]),
     "wfp": T(["جدار حماية ويندوز (WFP)", "فلاتر dropship ترمي حركة Overwatch.exe إلى نطاقات المناطق المحظورة"],
              ["Windows Filtering Platform", "dropship's filters drop Overwatch.exe traffic to blocked regions' IP blocks"]),
+    "wfp_short": T(["جدار حماية ويندوز (WFP)", "يرمي حركة اللعبة إلى المناطق المحظورة"],
+                   ["Windows Filtering Platform", "drops game traffic to blocked regions"]),
     "mm": T(["تسجيل الدخول والماتش ميكر", "يختار أقرب منطقة يستطيع الوصول إليها — المحظورة لا تُختار أبدًا"],
             ["Login & matchmaker", "picks the nearest region it can reach — blocked ones are never picked"]),
     "regions": T("مناطق سيرفرات اللعبة — 11 منطقة، نطاقات IP من ips.json، والذهبي أقرب واحدة لك", "Game server regions — 11 regions, IP blocks from ips.json, gold = the one nearest you"),
@@ -271,12 +283,14 @@ TXT = {
 
 # ------------------------------------------------------------------ التخطيط (بإحداثيات LTR تُعكس للعربية)
 class Layout:
-    def __init__(self, rtl):
+    def __init__(self, rtl, w=W, h=H, mobile=False):
         self.rtl = rtl
+        self.W, self.H, self.mobile = w, h, mobile
         self.items = []
+        self.notes = []  # (y, [lines]) — بدائل الأسهم بين المناطق في تخطيط الجوال
 
     def X(self, x, w):
-        return W - x - w if self.rtl else x
+        return self.W - x - w if self.rtl else x
 
     def zone(self, key, x, y, w, h, title):
         self.items.append(("zone", dict(key=key, x=self.X(x, w), y=y, w=w, h=h, title=title)))
@@ -291,12 +305,12 @@ class Layout:
         self.items.append(("text", dict(key=key, x=self.X(x, w), y=y, w=w, size=size, txt=txt, color=color, bold=bold)))
 
     def edge(self, key, pts, label, lpos, dashed=False):
-        p = [((W - x) if self.rtl else x, y) for x, y in pts]
-        lp = ((W - lpos[0]) if self.rtl else lpos[0], lpos[1])
+        p = [((self.W - x) if self.rtl else x, y) for x, y in pts]
+        lp = ((self.W - lpos[0]) if self.rtl else lpos[0], lpos[1])
         self.items.append(("edge", dict(key=key, pts=p, label=label, lpos=lp, dashed=dashed)))
 
     def callout(self, key, x, y, n, mirror=True):
-        self.items.append(("callout", dict(key=key, x=(W - x) if (self.rtl and mirror) else x, y=y, n=n)))
+        self.items.append(("callout", dict(key=key, x=(self.W - x) if (self.rtl and mirror) else x, y=y, n=n)))
 
     def stage(self, key, x, y, w, src, b64, date, lines, idx):
         self.items.append(("stage", dict(key=key, x=self.X(x, w), y=y, w=w, src=src, b64=b64, date=date, lines=lines, idx=idx)))
@@ -370,6 +384,109 @@ def build(lang, assets):
     return L
 
 
+MW = 440  # عرض صفحة الجوال: يُعرض 1:1 تقريبًا على الهاتف فتبقى الخطوط بحجمها
+
+
+def build_mobile(lang, assets):
+    """تخطيط الجوال: عمود واحد، كل منطقة تحت التي قبلها، والأسهم بين المناطق تصير ملاحظات داخل المنطقة"""
+    tx = lambda k: TXT[k][lang]
+    L = Layout(lang == "ar", w=MW, h=0, mobile=True)
+    M = 16                # الهامش
+    IW = MW - 2 * M       # عرض المنطقة
+    CX, CW = M + 12, IW - 24  # المحتوى داخل المنطقة
+    y = 150
+
+    # 01 جهاز اللاعب
+    z0 = y
+    L.card("ow", CX, y + 40, CW, 60, "gamepad-2", tx("ow"), "pc")
+    L.card("wfp", CX, y + 130, CW, 70, "shield-check", tx("wfp_short"), "pc")
+    L.edge("e1", [(CX + 60, y + 100), (CX + 60, y + 130)], tx("e_traffic"), (CX + 60 + 70, y + 115))
+    y += 130 + 70 + 52
+    zapp = y
+    sx, sw = CX + 10, CW - 20
+    sy = y + 44
+    sh = int(sw * 390 / 560)
+    L.image("shot_app", sx, sy, sw, sh, *assets["launcher"], caption=None)
+    isx = L.X(sx, sw)
+    for i, (pt, _) in enumerate(CALLOUTS):
+        L.callout(f"c{i}", isx + pt[0] * sw / 1001, sy + pt[1] * sh / 698, i + 1, mirror=False)
+    y = sy + sh + 14
+    for i, (_, label) in enumerate(CALLOUTS):
+        cy = y + i * 33
+        L.callout(f"cl{i}", sx + 12, cy + 13, i + 1)
+        L.text(f"ct{i}", sx + 32, cy + 3, sw - 36, 12, label[lang][0], bold=True)
+        L.text(f"cb{i}", sx + 32, cy + 18, sw - 36, 10, label[lang][1], color="muted")
+    y += 7 * 33 + 6
+    L.text("layers", sx, y, sw, 12, tx("layers"), color="faint", bold=True)
+    y += 22
+    cw2 = (sw - 8) / 2
+    for i, (icon, label) in enumerate(MODULES):
+        col, row = i % 2, i // 2
+        L.card(f"m{i}", sx + col * (cw2 + 8), y + row * 58, cw2, 50, icon, label[lang], "pc")
+    y += 5 * 58 + 6
+    L.text("under", sx, y, sw, 12, tx("under"), color="faint", bold=True)
+    y += 22
+    for i, (icon, label) in enumerate(UNDER):
+        L.card(f"u{i}", sx, y + i * 56, sw, 48, icon, label[lang], "pc")
+    y += 3 * 56 + 8
+    L.zone("app", CX, zapp, CW, y - zapp, tx("app_short"))
+    L.edge("e3", [(CX + CW - 80, zapp), (CX + CW - 80, z0 + 200)], tx("e_filters"), (CX + CW - 80, zapp - 26))
+    L.edge("e4", [(CX + 60, zapp), (CX + 60, z0 + 200)], tx("e_running"), (CX + 60 + 8, zapp - 26), dashed=True)
+    y += 20
+    L.zone("pc", M, z0, IW, y - z0, tx("z_pc"))
+    y += 44
+
+    # 02 Blizzard
+    z0 = y
+    L.notes.append((z0 + 40, [tx("n_allowed"), tx("n_ping")]))
+    L.card("mm", CX, y + 80, CW, 70, "compass", tx("mm"), "bliz")
+    y += 80 + 70 + 14
+    mh = int(CW * 169 / 400)
+    L.image("regions", CX, y, CW, mh, *assets["regions_m"], caption=tx("regions_short"))
+    y += mh + 36
+    L.zone("bliz", M, z0, IW, y - z0, tx("z_bliz"))
+    y += 44
+
+    # 03 الأصل
+    z0 = y
+    L.notes.append((z0 + 40, [tx("n_list")]))
+    L.card("ips", CX, y + 66, CW, 64, "file-json", tx("ips"), "up")
+    L.card("uprepo", CX, y + 140, CW, 64, "git-fork", tx("uprepo"), "up")
+    oh = int(CW * 187 / 270)
+    L.image("shot_up", CX, y + 218, CW, oh, *assets["original"], caption=tx("shot_up"))
+    y += 218 + oh + 36
+    L.zone("up", M, z0, IW, y - z0, tx("z_up"))
+    y += 44
+
+    # 04 النسخة العربية
+    z0 = y
+    L.notes.append((z0 + 40, [tx("n_fork"), tx("n_update")]))
+    for i, (k, icon) in enumerate([("repo", "git-branch"), ("actions", "workflow"), ("rel", "package"), ("users", "download")]):
+        col, row = i % 2, i // 2
+        L.card(k, CX + col * (cw2 + 8), y + 80 + row * 58, cw2, 50, icon, tx(k), "ar")
+    y += 80 + 2 * 58 + 6
+    swh = int(CW * 142 / 270)
+    L.image("shot_site", CX, y, CW, swh, *assets["site"], caption=tx("site"))
+    y += swh + 30
+    L.image("shot_phone", CX, y, 100, 180, *assets["phone"], caption=tx("phone"))
+    L.card("comm", CX + 116, y, CW - 116, 60, "users", tx("comm"), "ar")
+    L.card("gh", CX + 116, y + 72, CW - 116, 60, "chart-bar", tx("gh"), "ar")
+    y += 180 + 36
+    L.zone("ar", M, z0, IW, y - z0, tx("z_ar"))
+    y += 44
+
+    # 05 المراحل: عمودان
+    z0 = y
+    for i, (date, src, label) in enumerate(STAGES):
+        col, row = i % 2, i // 2
+        L.stage(f"s{i}", CX + col * (cw2 + 8), y + 40 + row * 224, cw2, *assets["stages"][i], date, label[lang], i)
+    y += 40 + 4 * 224 + 4
+    L.zone("stages", M, z0, IW, y - z0, tx("z_stages"))
+    y += 36
+    L.H = y + 76
+    return L
+
+
 # ------------------------------------------------------------------ SVG
 def render_svg(L, lang, theme):
     pal = PAL[theme]
@@ -377,6 +494,7 @@ def render_svg(L, lang, theme):
     esc = html.escape
     font = "'IBM Plex Sans Arabic','Thmanyah Sans',system-ui,sans-serif" if rtl else "Inter,system-ui,sans-serif"
     mono = "'DM Mono','JetBrains Mono',Consolas,monospace"
+    W, H = L.W, L.H
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" role="img" aria-label="{esc(TXT["title"][lang])}" lang="{lang}" direction="{"rtl" if rtl else "ltr"}">',
          f'<style>text{{font-family:{font};direction:{"rtl" if rtl else "ltr"};unicode-bidi:plaintext}}.m{{font-family:{mono}}}</style>',
          f'<defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="{pal["grid"]}" stroke-width="1"/></pattern>'
@@ -390,33 +508,52 @@ def render_svg(L, lang, theme):
                 f'text-anchor="{anchor}">{esc(s)}</text>')
 
     # الترويسة
-    hx = W - 60 if rtl else 60
-    o.append(f'<circle cx="{hx}" cy="60" r="30" fill="{pal["accent"]}"/>')
-    o.append(icon_svg_inner("zap", pal["bg"], hx - 16, 44, 32))
-    tx0 = W - 110 if rtl else 110
-    o.append(txt(tx0, 52, 26, TXT["title"][lang], pal["text"], bold=True))
-    o.append(txt(tx0, 84, 13.5, TXT["subtitle"][lang], pal["muted"]))
-    offset = 0
-    for c in TXT["chips"][lang][::-1]:
-        cw = len(c) * 7.6 + 26
-        xx = (60 + offset) if rtl else (W - 60 - offset - cw)
-        o.append(f'<rect x="{xx:.0f}" y="44" width="{cw:.0f}" height="30" rx="15" fill="{pal["card"]}" stroke="{pal["card_line"]}"/>')
-        o.append(txt(xx + cw / 2, 63, 12, c, pal["text"], mono_=True, anchor="middle"))
-        offset += cw + 10
-    o.append(f'<line x1="40" y1="118" x2="{W - 40}" y2="118" stroke="{pal["card_line"]}"/>')
+    if L.mobile:
+        hx = W - 40 if rtl else 40
+        o.append(f'<circle cx="{hx}" cy="48" r="22" fill="{pal["accent"]}"/>')
+        o.append(icon_svg_inner("zap", pal["bg"], hx - 12, 36, 24))
+        tx0 = W - 74 if rtl else 74
+        o.append(txt(tx0, 44, 17, TXT["title_short"][lang], pal["text"], bold=True))
+        o.append(txt(tx0, 64, 10.5, TXT["subtitle_short"][lang], pal["muted"]))
+        offset = 0
+        for c in TXT["chips"][lang]:
+            cw = len(c) * 6.8 + 20
+            xx = (W - 16 - offset - cw) if rtl else (16 + offset)
+            o.append(f'<rect x="{xx:.0f}" y="88" width="{cw:.0f}" height="24" rx="12" fill="{pal["card"]}" stroke="{pal["card_line"]}"/>')
+            o.append(txt(xx + cw / 2, 104, 10.5, c, pal["text"], mono_=True, anchor="middle"))
+            offset += cw + 6
+        o.append(f'<line x1="16" y1="126" x2="{W - 16}" y2="126" stroke="{pal["card_line"]}"/>')
+    else:
+        hx = W - 60 if rtl else 60
+        o.append(f'<circle cx="{hx}" cy="60" r="30" fill="{pal["accent"]}"/>')
+        o.append(icon_svg_inner("zap", pal["bg"], hx - 16, 44, 32))
+        tx0 = W - 110 if rtl else 110
+        o.append(txt(tx0, 52, 26, TXT["title"][lang], pal["text"], bold=True))
+        o.append(txt(tx0, 84, 13.5, TXT["subtitle"][lang], pal["muted"]))
+        offset = 0
+        for c in TXT["chips"][lang][::-1]:
+            cw = len(c) * 7.6 + 26
+            xx = (60 + offset) if rtl else (W - 60 - offset - cw)
+            o.append(f'<rect x="{xx:.0f}" y="44" width="{cw:.0f}" height="30" rx="15" fill="{pal["card"]}" stroke="{pal["card_line"]}"/>')
+            o.append(txt(xx + cw / 2, 63, 12, c, pal["text"], mono_=True, anchor="middle"))
+            offset += cw + 10
+        o.append(f'<line x1="40" y1="118" x2="{W - 40}" y2="118" stroke="{pal["card_line"]}"/>')
 
-    for kind, it in L.items:
-        if kind != "zone":
-            continue
+    # المناطق الخارجية أولًا ثم منطقة البرنامج الداخلية فوقها
+    zones = [it for kind, it in L.items if kind == "zone"]
+    for it in sorted(zones, key=lambda z: z["key"] == "app"):
         inner = it["key"] == "app"
         fill, line, acc = pal["zone"]["pc" if inner else it["key"]]
         dash = "" if inner else ' stroke-dasharray="10 7"'
         o.append(f'<rect x="{it["x"]}" y="{it["y"]}" width="{it["w"]}" height="{it["h"]}" rx="18" fill="{pal["card"] if inner else fill}" '
                  f'stroke="{line}" stroke-width="{1.5 if inner else 2}"{dash} opacity="{0.92 if inner else 1}"/>')
-        tw = len(it["title"]) * (8.4 if rtl else 8.0) + 40
+        fs = (13 if inner else 14) if not L.mobile else 12
+        tw = len(it["title"]) * (fs * 0.64 if rtl else fs * 0.6) + 32
         tx_ = it["x"] + it["w"] - 16 - tw if rtl else it["x"] + 16
-        o.append(f'<rect x="{tx_:.0f}" y="{it["y"] - 16}" width="{tw:.0f}" height="32" rx="10" fill="{acc}"/>')
-        o.append(txt(tx_ + tw / 2, it["y"] + 5, 13 if inner else 14, it["title"], pal["bg"] if theme == "dark" else "#ffffff", bold=True, anchor="middle"))
+        if L.mobile and inner:  # على الجوال يتوسط التبويب حتى لا يلامس لافتات الأسهم
+            tx_ = it["x"] + (it["w"] - tw) / 2
+        o.append(f'<rect x="{tx_:.0f}" y="{it["y"] - 15}" width="{tw:.0f}" height="30" rx="10" fill="{acc}"/>')
+        o.append(txt(tx_ + tw / 2, it["y"] + 4.5, fs, it["title"], pal["bg"] if theme == "dark" else "#ffffff", bold=True, anchor="middle"))
 
     for kind, it in L.items:
         if kind == "card":
@@ -447,15 +584,17 @@ def render_svg(L, lang, theme):
         elif kind == "stage":
             x, y, w = it["x"], it["y"], it["w"]
             acc = pal["zone"]["stages"][2]
-            ih = int((w - 16) * 0.7)
-            o.append(f'<rect x="{x}" y="{y}" width="{w}" height="270" rx="12" fill="{pal["card"]}" stroke="{pal["card_line"]}" filter="url(#sh)"/>')
+            ih = int((w - 16) * (0.7 if not L.mobile else 0.56))
+            ch_ = 270 if not L.mobile else 212
+            o.append(f'<rect x="{x}" y="{y}" width="{w}" height="{ch_}" rx="12" fill="{pal["card"]}" stroke="{pal["card_line"]}" filter="url(#sh)"/>')
             o.append(f'<image x="{x + 8}" y="{y + 8}" width="{w - 16}" height="{ih}" href="data:image/webp;base64,{it["b64"]}" preserveAspectRatio="xMidYMid slice"/>')
             ty = y + 8 + ih + 20
             o.append(txt(x + w / 2, ty, 10, it["date"], acc, mono_=True, anchor="middle"))
             o.append(txt(x + w / 2, ty + 18, 11.5, it["lines"][0], pal["text"], bold=True, anchor="middle"))
             words, lines, cur = it["lines"][1].split(" "), [], ""
+            maxc = 22 if not L.mobile else 30
             for wd in words:
-                if len(cur) + len(wd) > 22 and cur:
+                if len(cur) + len(wd) > maxc and cur:
                     lines.append(cur)
                     cur = wd
                 else:
@@ -463,10 +602,15 @@ def render_svg(L, lang, theme):
             lines.append(cur)
             for i, ln in enumerate(lines[:4]):
                 o.append(txt(x + w / 2, ty + 34 + i * 13, 9.5, ln, pal["muted"], anchor="middle"))
-            o.append(f'<circle cx="{x + w / 2}" cy="{y + 285}" r="5" fill="{acc}"/>')
-            if it["idx"] < len(STAGES) - 1:
-                step = (w + 10) if not rtl else -(w + 10)
-                o.append(f'<line x1="{x + w / 2 + (6 if not rtl else -6)}" y1="{y + 285}" x2="{x + w / 2 + step - (6 if not rtl else -6)}" y2="{y + 285}" stroke="{acc}" stroke-width="2" stroke-dasharray="4 4"/>')
+            if not L.mobile:
+                o.append(f'<circle cx="{x + w / 2}" cy="{y + 285}" r="5" fill="{acc}"/>')
+                if it["idx"] < len(STAGES) - 1:
+                    step = (w + 10) if not rtl else -(w + 10)
+                    o.append(f'<line x1="{x + w / 2 + (6 if not rtl else -6)}" y1="{y + 285}" x2="{x + w / 2 + step - (6 if not rtl else -6)}" y2="{y + 285}" stroke="{acc}" stroke-width="2" stroke-dasharray="4 4"/>')
+            else:
+                nx = x + 18 if not rtl else x + w - 18
+                o.append(f'<circle cx="{nx}" cy="{y + 18}" r="11" fill="{acc}"/>')
+                o.append(txt(nx, y + 22, 11, str(it["idx"] + 1), "#ffffff", bold=True, mono_=True, anchor="middle"))
 
     for kind, it in L.items:
         if kind != "edge":
@@ -480,9 +624,19 @@ def render_svg(L, lang, theme):
             o.append(f'<rect x="{lx - tw / 2:.0f}" y="{ly - 9}" width="{tw:.0f}" height="18" rx="6" fill="{pal["label_bg"]}" stroke="{pal["card_line"]}"/>')
             o.append(txt(lx, ly + 4, 10.5, it["label"], pal["muted"], anchor="middle"))
 
-    fx = W - 40 if rtl else 40
-    o.append(txt(fx, 1338, 11.5, TXT["legend"][lang], pal["muted"]))
-    o.append(txt(fx, 1360, 11.5, TXT["credit"][lang], pal["faint"]))
+    # ملاحظات الروابط بين المناطق (الجوال)
+    for zy, lines in L.notes:
+        for i, ln in enumerate(lines):
+            o.append(txt(W - 32 if rtl else 32, zy + i * 16, 10.5, ln, pal["muted"]))
+
+    if L.mobile:
+        fx, fy = (W - 16 if rtl else 16), H - 46
+        o.append(txt(fx, fy, 10, TXT["legend_short"][lang], pal["muted"]))
+        o.append(txt(fx, fy + 18, 10, TXT["credit"][lang], pal["faint"]))
+    else:
+        fx = W - 40 if rtl else 40
+        o.append(txt(fx, 1338, 11.5, TXT["legend"][lang], pal["muted"]))
+        o.append(txt(fx, 1360, 11.5, TXT["credit"][lang], pal["faint"]))
     o.append("</svg>\n")
     return "".join(o)
 
@@ -518,8 +672,8 @@ def render_drawio(L, lang, page_id):
         vertex(f"chip{i}", x, 44, cw, 30, f"rounded=1;arcSize=50;html=1;fillColor={pal['card']};strokeColor={pal['card_line']};fontSize=11;fontFamily=Consolas;fontColor={pal['text']};", c)
         offset += cw + 10
 
-    for kind, it in L.items:
-        if kind == "zone":
+    for it in sorted([it for kind, it in L.items if kind == "zone"], key=lambda z: z["key"] == "app"):
+        if True:
             inner = it["key"] == "app"
             fill, line, acc = pal["zone"]["pc" if inner else it["key"]]
             vertex(it["key"], it["x"], it["y"], it["w"], it["h"],
@@ -593,9 +747,13 @@ def main():
         for theme in ("light", "dark"):
             a = dict(assets)
             a["regions"] = regions_map(theme)
+            a["regions_m"] = regions_map(theme, w=400, h=169, suffix="-m")
             L = build(lang, a)
             with open(os.path.join(OUT, f"architecture-{lang}-{theme}.svg"), "w", encoding="utf-8", newline="\n") as f:
                 f.write(render_svg(L, lang, theme))
+            Lm = build_mobile(lang, a)
+            with open(os.path.join(OUT, f"architecture-{lang}-{theme}-mobile.svg"), "w", encoding="utf-8", newline="\n") as f:
+                f.write(render_svg(Lm, lang, theme))
             if theme == "light":
                 pages.append(render_drawio(L, lang, lang))
     xml = ('<?xml version="1.0" encoding="UTF-8"?>\n<mxfile host="dropship-site" modified="2026-09-21T00:00:00.000Z" agent="scripts/diagram.py" version="24.0.0" type="device">'
