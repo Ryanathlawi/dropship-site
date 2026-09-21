@@ -75,9 +75,9 @@ export const en = {
       "A working replica of the dropship window. Block servers, switch tabs, change the theme and language, collapse it. Nothing is installed and nothing is sent anywhere.",
     tip: "Left click blocks or allows a server. Right click keeps that server and flips all the others, exactly like the app.",
     before: "How it was",
-    after: "How it's becoming",
-    beforeNote: "The current interface, as shipped today.",
-    afterNote: "The proposed new interface for the Arabic edition: a launcher with a living world map. An interactive concept; it will change.",
+    after: "How it is now",
+    beforeNote: "The original interface, still what the English build ships.",
+    afterNote: "The Arabic edition's new interface, shipped in v3.1.0: a launcher with a living world map, flags and blocking presets. An interactive replica; the real one is a download away.",
   },
   stats: {
     downloads: "Downloads",
@@ -163,10 +163,11 @@ export const en = {
     items: [
       { key: "en-expanded", label: "Expanded", caption: "The main window: your game, the server list and the tabs." },
       { key: "en-collapsed", label: "Collapsed", caption: "Collapsed mode keeps only the server list on screen." },
-      { key: "ar-main-dark", label: "Arabic · dark", caption: "The Arabic build with a mirrored right-to-left layout." },
+      { key: "ar-main-dark", label: "Arabic · dark", caption: "The Arabic edition's launcher: a live world map with routes from you to every allowed server, flags, and a best-route card." },
       { key: "ar-main-light", label: "Arabic · light", caption: "Light theme, same layout." },
+      { key: "ar-presets", label: "Presets", caption: "Blocking presets: one click or a hotkey applies a set of blocked servers; make your own in two steps." },
       { key: "ar-tour", label: "Guided tour", caption: "The onboarding tour dims the window and explains each panel." },
-      { key: "ar-tabs", label: "Options", caption: "Zoom, theme, language and firewall tools in the options tab." },
+      { key: "ar-tabs", label: "Options", caption: "Zoom, theme and firewall tools in the options panel, floating over the map." },
     ],
   },
   faq: {
@@ -328,8 +329,8 @@ export const ar: Dict = {
     tip: "الضغطة اليسرى تحظر السيرفر أو تسمح به. الضغطة اليمنى تبقي هذا السيرفر وتعكس كل الباقي، بالضبط مثل البرنامج.",
     before: "كيف كان",
     after: "كيف صار",
-    beforeNote: "الواجهة الحالية كما هي في البرنامج اليوم.",
-    afterNote: "الواجهة الجديدة المقترحة للنسخة العربية: لانشر بخريطة عالم حيّة. تصميم تفاعلي أولي، وبيتغير.",
+    beforeNote: "الواجهة الأصلية، وما تزال في النسخة الإنجليزية.",
+    afterNote: "الواجهة الجديدة للنسخة العربية كما صدرت في الإصدار 3.1.0: لانشر بخريطة عالم حيّة وأعلام واختصارات حظر. نسخة تفاعلية، والحقيقية على بُعد تحميل.",
   },
   stats: {
     downloads: "تحميل",
@@ -415,10 +416,11 @@ export const ar: Dict = {
     items: [
       { key: "en-expanded", label: "الوضع الكامل", caption: "النافذة الرئيسية: لعبتك، قائمة السيرفرات، والتبويبات." },
       { key: "en-collapsed", label: "الوضع المصغّر", caption: "الوضع المصغّر يبقي قائمة السيرفرات فقط على الشاشة." },
-      { key: "ar-main-dark", label: "عربي · داكن", caption: "النسخة العربية بتخطيط معكوس من اليمين لليسار." },
+      { key: "ar-main-dark", label: "عربي · داكن", caption: "لانشر النسخة العربية: خريطة عالم حيّة بمسارات منك إلى كل سيرفر مسموح، أعلام، وبطاقة أفضل مسار." },
       { key: "ar-main-light", label: "عربي · فاتح", caption: "المظهر الفاتح، نفس التخطيط." },
+      { key: "ar-presets", label: "الاختصارات", caption: "اختصارات الحظر: ضغطة أو مفتاح يطبّق مجموعة سيرفرات محظورة، وتنشئ اختصارك بخطوتين." },
       { key: "ar-tour", label: "الجولة التعريفية", caption: "الجولة تعتّم النافذة وتشرح كل جزء على حدة." },
-      { key: "ar-tabs", label: "الخيارات", caption: "التكبير والمظهر واللغة وأدوات الجدار الناري في تبويب الخيارات." },
+      { key: "ar-tabs", label: "الخيارات", caption: "التكبير والمظهر وأدوات الجدار الناري في لوحة الخيارات فوق الخريطة." },
     ],
   },
   faq: {
