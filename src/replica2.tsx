@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { asset } from "./components";
 import { Typewriter } from "./fx";
 import type { Lang } from "./i18n";
-import { SERVERS, STR } from "./replica";
+import { SERVERS, STR, useLivePings } from "./replica";
 import { LAT_BOT, LAT_TOP, WORLD, WORLD_H, WORLD_W } from "./world";
 import "./replica2.css";
 
@@ -139,6 +139,7 @@ function DotWorld({ light, rgb }: { light: boolean; rgb: string }) {
 
 export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme: RepTheme }) {
   const reduced = useReducedMotion();
+  const servers = useLivePings(reduced);
   const [lang, setLang] = useState<Lang>(siteLang);
   const [themePref, setThemePref] = useState<"pc" | RepTheme>("pc");
   const [mini, setMini] = useState(false);
@@ -179,14 +180,14 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
   const invert = (code: string) =>
     setBlocked((prev) => {
       const next = new Set<string>();
-      for (const sv of SERVERS) if (sv.code !== code && !prev.has(sv.code)) next.add(sv.code);
+      for (const sv of servers) if (sv.code !== code && !prev.has(sv.code)) next.add(sv.code);
       if (prev.has(code)) next.add(code);
       return next;
     });
 
-  const list = sorted ? [...SERVERS].sort((a, b) => a.ms - b.ms) : SERVERS;
-  const best = SERVERS.filter((sv) => !blocked.has(sv.code)).sort((a, b) => a.ms - b.ms)[0];
-  const maxMs = Math.max(...SERVERS.map((sv) => sv.ms));
+  const list = sorted ? [...servers].sort((a, b) => a.ms - b.ms) : servers;
+  const best = servers.filter((sv) => !blocked.has(sv.code)).sort((a, b) => a.ms - b.ms)[0];
+  const maxMs = Math.max(...servers.map((sv) => sv.ms));
   const you = project(YOU);
 
   const arc = (code: string) => {
@@ -203,7 +204,7 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
       <div className="lch-map" aria-hidden={mini} ref={mapRef}>
         <DotWorld light={theme === "light"} rgb={DOTS[pal][theme]} />
         <svg className="lch-net" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMid meet">
-          {SERVERS.filter((sv) => !blocked.has(sv.code)).map((sv) => (
+          {servers.filter((sv) => !blocked.has(sv.code)).map((sv) => (
             <path key={sv.code} d={arc(sv.code)} className={`lch-arc ${best?.code === sv.code ? "best" : ""} ${hover === sv.code ? "hot" : ""}`} />
           ))}
           <g className="lch-you" transform={`translate(${you.x} ${you.y})`}>
@@ -214,7 +215,7 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
               {t.you}
             </text>
           </g>
-          {SERVERS.map((sv) => {
+          {servers.map((sv) => {
             const p = project(GEO[sv.code]);
             const off = blocked.has(sv.code);
             const isBest = best?.code === sv.code;

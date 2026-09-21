@@ -9,6 +9,7 @@ export const en = {
       "dropship is a free, portable server selector for Overwatch 2. Block the regions you don't want and play where your ping is best. Nothing in the game is touched.",
   },
   announce: [
+    { text: "Arabic edition v3.1.2: live ping for every server, blocking presets, the launcher map", href: "#download" },
     { text: "v3.0.6 is out: 9 MB, no installer, in-app updates", href: "#download" },
     { text: "The Arabic version is here, with a full right-to-left layout", href: "#download" },
     { text: "Something not working? Real people answer in the Discord", href: "https://discord.gg/QYrF8CVhbC" },
@@ -74,7 +75,7 @@ export const en = {
     title: "The app, running in your browser.",
     subtitle:
       "A working replica of the dropship window. Block servers, switch tabs, change the theme and language, collapse it. Nothing is installed and nothing is sent anywhere.",
-    tip: "Left click blocks or allows a server. Right click keeps that server and flips all the others, exactly like the app.",
+    tip: "Left click blocks or allows a server. Right click keeps that server and flips all the others, exactly like the app. The ping numbers here are demo values that drift like the real list; the app measures the real ones every 15 seconds.",
     before: "How it was",
     after: "How it is now",
     beforeNote: "The original interface, still what the English build ships.",
@@ -101,7 +102,7 @@ export const en = {
       },
       {
         title: "Live ping",
-        text: "Every server is pinged as the list loads, so you see what you'd actually get before you queue.",
+        text: "Every server is re-measured every 15 seconds — even the ones that ignore ping get measured from inside their own network — so you see what you'd actually get before you queue.",
       },
       {
         title: "Most likely to play on",
@@ -265,6 +266,7 @@ export const ar: Dict = {
       "dropship برنامج مجاني ومحمول لاختيار سيرفرات أوفرواتش 2. احظر المناطق اللي ما تبيها والعب حيث البنق أفضل. ما يلمس اللعبة أبدًا.",
   },
   announce: [
+    { text: "النسخة العربية 3.1.2: بنق حيّ لكل السيرفرات، اختصارات حظر، وخريطة اللانشر", href: "#download" },
     { text: "الإصدار 3.0.6 متوفر: 9 م.ب، بدون تثبيت، وتحديثات داخل البرنامج", href: "#download" },
     { text: "النسخة العربية وصلت، بتخطيط كامل من اليمين لليسار", href: "#download" },
     { text: "شي ما يشتغل؟ ناس حقيقيين يردون عليك في ديسكورد النسخة العربية", href: "https://discord.gg/H8sq6Uc3kA" },
@@ -330,7 +332,7 @@ export const ar: Dict = {
     title: "البرنامج، شغّال في متصفحك.",
     subtitle:
       "نسخة طبق الأصل من نافذة dropship تشتغل هنا. احظر سيرفرات، بدّل التبويبات، غيّر المظهر واللغة، صغّرها. ما فيه شي يتثبّت ولا شي يُرسل لأي مكان.",
-    tip: "الضغطة اليسرى تحظر السيرفر أو تسمح به. الضغطة اليمنى تبقي هذا السيرفر وتعكس كل الباقي، بالضبط مثل البرنامج.",
+    tip: "الضغطة اليسرى تحظر السيرفر أو تسمح به. الضغطة اليمنى تبقي هذا السيرفر وتعكس كل الباقي، بالضبط مثل البرنامج. أرقام البنق هنا تجريبية وتتحرك مثل القائمة الحقيقية؛ البرنامج يقيس الحقيقية كل 15 ثانية.",
     before: "كيف كان",
     after: "كيف صار",
     beforeNote: "الواجهة الأصلية، وما تزال في النسخة الإنجليزية.",
@@ -356,8 +358,8 @@ export const ar: Dict = {
         text: "ضغطة واحدة لكل سيرفر. الحظر يبقى لين ترفعه، حتى بعد إغلاق البرنامج.",
       },
       {
-        title: "بنق مباشر",
-        text: "كل سيرفر يُقاس بنقه وقت تحميل القائمة، فتشوف اللي بتحصل عليه فعلًا قبل ما تدخل الطابور.",
+        title: "بنق حيّ",
+        text: "كل سيرفر يُقاس بنقه كل 15 ثانية — حتى اللي ما يرد على الـ ping يُقاس من داخل شبكته — فتشوف اللي بتحصل عليه فعلًا قبل ما تدخل الطابور.",
       },
       {
         title: "على الأغلب بتلعب على",

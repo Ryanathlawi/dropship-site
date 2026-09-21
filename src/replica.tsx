@@ -25,6 +25,29 @@ export const SERVERS = [
   { name: "taiwan", code: "tpe1", ms: 92, flag: "tw" },
 ];
 
+/** the browser cannot ping game servers, so the demo numbers drift a little every couple of
+ *  seconds — the way the real list moves — while staying near each server's typical value */
+export function useLivePings(reduced: boolean | null) {
+  const [servers, setServers] = useState(SERVERS);
+  useEffect(() => {
+    if (reduced) return;
+    const id = setInterval(
+      () =>
+        setServers((prev) =>
+          prev.map((sv, i) => {
+            if (Math.random() < 0.45) return sv;
+            const base = SERVERS[i].ms;
+            const next = Math.round(sv.ms + (Math.random() * 4 - 2));
+            return { ...sv, ms: Math.max(base - 4, Math.min(base + 4, next)) };
+          }),
+        ),
+      2200,
+    );
+    return () => clearInterval(id);
+  }, [reduced]);
+  return servers;
+}
+
 export const STR = {
   en: {
     title: "dropship",
@@ -159,6 +182,7 @@ function Signal({ ms }: { ms: number }) {
 
 export function AppReplica({ siteLang, siteTheme }: { siteLang: Lang; siteTheme: RepTheme }) {
   const reduced = useReducedMotion();
+  const servers = useLivePings(reduced);
   const [lang, setLang] = useState<Lang>(siteLang);
   const [themePref, setThemePref] = useState<"pc" | RepTheme>("pc");
   const [mini, setMini] = useState(false);
@@ -185,14 +209,14 @@ export function AppReplica({ siteLang, siteTheme }: { siteLang: Lang; siteTheme:
   const toggleOthers = (code: string) =>
     setBlocked((prev) => {
       const next = new Set<string>();
-      for (const sv of SERVERS) if (sv.code !== code && !prev.has(sv.code)) next.add(sv.code);
+      for (const sv of servers) if (sv.code !== code && !prev.has(sv.code)) next.add(sv.code);
       if (prev.has(code)) next.add(code);
       return next;
     });
 
-  const allowed = SERVERS.filter((sv) => !blocked.has(sv.code));
+  const allowed = servers.filter((sv) => !blocked.has(sv.code));
   const best = [...allowed].sort((a, b) => a.ms - b.ms)[0];
-  const codes = SERVERS.filter((sv) => blocked.has(sv.code)).map((sv) => `"${sv.code}"`);
+  const codes = servers.filter((sv) => blocked.has(sv.code)).map((sv) => `"${sv.code}"`);
 
   return (
     <div className={`rep rep-${theme} ${mini ? "mini" : ""} ${noBg ? "nobg" : ""}`} dir={ar ? "rtl" : "ltr"} lang={lang} style={{ fontSize: `${zoom * 13}px` }}>
@@ -228,7 +252,7 @@ export function AppReplica({ siteLang, siteTheme }: { siteLang: Lang; siteTheme:
 
                 <h4>{s.willOnly}</h4>
                 <div className="rep-stars">
-                  {SERVERS.map((sv) => (
+                  {servers.map((sv) => (
                     <button key={sv.code} className={`rep-star ${blocked.has(sv.code) ? "off" : sv.ms < 50 ? "near" : ""}`} onClick={() => toggle(sv.code)} title={sv.name} aria-label={sv.name} aria-pressed={blocked.has(sv.code)}>
                       <Star size={14} fill="currentColor" />
                     </button>
@@ -366,7 +390,7 @@ export function AppReplica({ siteLang, siteTheme }: { siteLang: Lang; siteTheme:
             <span>{s.want}</span>
           </div>
           <ul className="rep-list">
-            {SERVERS.map((sv) => {
+            {servers.map((sv) => {
               const off = blocked.has(sv.code);
               return (
                 <li key={sv.code}>
