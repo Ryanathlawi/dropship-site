@@ -55,7 +55,7 @@ NODES = [
     ("up", "cont", 1140, 460, 540, 190, "cont_up",
      T(["الأصل — stormy (GPL-3.0)"], ["Upstream — stormy (GPL-3.0)"])),
     ("aredit", "cont", 1140, 680, 540, 440, "cont_ar",
-     T(["النسخة العربية — تطوير ريان العذلاوي"], ["Arabic edition — developed by Ryan Athlawi"])),
+     T(["النسخة العربية — تطوير ريان الأثلاوي"], ["Arabic edition — developed by Ryan Athlawi"])),
 
     # الصف العلوي داخل الجهاز
     ("ow", "box", 80, 150, 240, 90, "win",
@@ -177,7 +177,7 @@ NODES = [
     ("legend", "box", 40, 1010, 1060, 110, "legend",
      T(["كيف تقرأ المخطط",
         "الأسهم = تدفق البيانات · المتقطّع = يتكرر دوريًا · أزرق: الواجهة · بنفسجي: النواة · أخضر: الوحدات · رمادي: ويندوز",
-        "برتقالي: Blizzard · كهرماني: الأصل (stormy) · تيل: النسخة العربية (ريان العذلاوي) · الترخيص GPL-3.0 للكل"],
+        "برتقالي: Blizzard · كهرماني: الأصل (stormy) · تيل: النسخة العربية (ريان الأثلاوي) · الترخيص GPL-3.0 للكل"],
        ["How to read this",
         "arrows = data flow · dashed = periodic · blue: UI · violet: core · green: modules · grey: Windows",
         "orange: Blizzard · amber: upstream (stormy) · teal: Arabic edition (Ryan Athlawi) · everything GPL-3.0"])),
@@ -219,7 +219,7 @@ EDGES = [
 ]
 
 TITLE = T(["dropship — النسخة العربية · مخطط المشروع الكامل"], ["dropship — Arabic edition · full project map"])
-SUBTITLE = T(["الإصدار 3.1.2 · سبتمبر 2026 · تطوير ريان العذلاوي · مبني على dropship من stormy"],
+SUBTITLE = T(["الإصدار 3.1.2 · سبتمبر 2026 · تطوير ريان الأثلاوي · مبني على dropship من stormy"],
              ["v3.1.2 · September 2026 · developed by Ryan Athlawi · built on dropship by stormy"])
 
 
