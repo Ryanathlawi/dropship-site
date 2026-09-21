@@ -318,9 +318,10 @@ def build(lang, assets):
         L.callout(f"c{i}", isx + pt[0] * sw / 1001, sy + pt[1] * sh / 698, i + 1, mirror=False)
     lx, ly = 690, 372
     for i, (_, label) in enumerate(CALLOUTS):
+        # في العربية تُعكس الإحداثيات، فالرقم يقف يمين النص بعد العكس تلقائيًا
         L.callout(f"cl{i}", lx + 12, ly + 14 + i * 34, i + 1)
-        L.text(f"ct{i}", lx + 32, ly + 4 + i * 34, 460, 12.5, label[lang][0], bold=True)
-        L.text(f"cb{i}", lx + 32, ly + 19 + i * 34, 460, 10.5, label[lang][1], color="muted")
+        L.text(f"ct{i}", lx + 32, ly + 4 + i * 34, 440, 12.5, label[lang][0], bold=True)
+        L.text(f"cb{i}", lx + 32, ly + 19 + i * 34, 440, 10.5, label[lang][1], color="muted")
     L.text("layers", lx, 622, 460, 12, tx("layers"), color="faint", bold=True)
     for i, (icon, label) in enumerate(MODULES):
         col, row = i % 3, i // 3
@@ -495,6 +496,8 @@ def render_drawio(L, lang, page_id):
     align = "right" if rtl else "left"
     cells = ['<mxCell id="0"/>', '<mxCell id="1" parent="0"/>']
     P = page_id
+    # الصور تُحمَّل من الموقع مع رقم نسخة حتى لا تعلق نسخة قديمة في كاش draw.io
+    img_v = "?v=" + VERSION.lstrip("v")
 
     def add(c):
         cells.append(c)
@@ -536,19 +539,19 @@ def render_drawio(L, lang, page_id):
             value = f"<b>{lines[0]}</b>" + "".join(f'<br><font style="font-size:10px" color="{pal["muted"]}">{ln}</font>' for ln in lines[1:])
             vertex(it["key"] + "_l", tx_, it["y"], tw, it["h"], f"text;html=1;whiteSpace=wrap;align={align};verticalAlign=middle;fontSize=12;fontColor={pal['text']};{tdir}", value)
         elif kind == "image":
-            vertex(it["key"], it["x"], it["y"], it["w"], it["h"], f"shape=image;imageAspect=0;image={SITE}diagram/{it['src']};rounded=1;strokeColor={pal['shot_line']};shadow=1;")
+            vertex(it["key"], it["x"], it["y"], it["w"], it["h"], f"shape=image;imageAspect=0;image={SITE}diagram/{it['src']}{img_v};rounded=1;strokeColor={pal['shot_line']};shadow=1;")
             if it["caption"]:
                 vertex(it["key"] + "_c", it["x"], it["y"] + it["h"] + 4, it["w"], 20, f"text;html=1;align={align};verticalAlign=top;fontSize=10;fontColor={pal['muted']};{tdir}", it["caption"])
         elif kind == "callout":
             vertex(it["key"], it["x"] - 11, it["y"] - 11, 22, 22, f"ellipse;fillColor={pal['gold']};strokeColor=#ffffff;strokeWidth=2;fontColor=#ffffff;fontStyle=1;fontSize=11;fontFamily=Consolas;", str(it["n"]))
         elif kind == "text":
-            vertex(it["key"], it["x"], it["y"], it["w"], it["size"] + 8, f"text;html=1;align={align};verticalAlign=middle;fontSize={it['size']};fontColor={pal[it['color']]};{'fontStyle=1;' if it['bold'] else ''}{tdir}", it["txt"])
+            vertex(it["key"], it["x"], it["y"], it["w"], it["size"] + 8, f"text;html=1;whiteSpace=wrap;overflow=hidden;align={align};verticalAlign=middle;fontSize={it['size']};fontColor={pal[it['color']]};{'fontStyle=1;' if it['bold'] else ''}{tdir}", it["txt"])
         elif kind == "stage":
             x, y, w = it["x"], it["y"], it["w"]
             acc = pal["zone"]["stages"][2]
             ih = int((w - 16) * 0.7)
             vertex(it["key"], x, y, w, 270, f"rounded=1;arcSize=10;html=1;fillColor={pal['card']};strokeColor={pal['card_line']};shadow=1;fontSize=1;")
-            vertex(it["key"] + "_i", x + 8, y + 8, w - 16, ih, f"shape=image;imageAspect=0;image={SITE}diagram/{it['src']};rounded=1;")
+            vertex(it["key"] + "_i", x + 8, y + 8, w - 16, ih, f"shape=image;imageAspect=0;image={SITE}diagram/{it['src']}{img_v};rounded=1;")
             vertex(it["key"] + "_t", x + 6, y + 8 + ih + 4, w - 12, 270 - ih - 20,
                    f"text;html=1;whiteSpace=wrap;align=center;verticalAlign=top;fontSize=11;fontColor={pal['text']};{tdir}",
                    f'<font style="font-size:10px" color="{acc}">{it["date"]}</font><br><b>{it["lines"][0]}</b><br><font style="font-size:9px" color="{pal["muted"]}">{it["lines"][1]}</font>')
