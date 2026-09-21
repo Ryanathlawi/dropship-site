@@ -29,6 +29,7 @@ const AppReplica = lazy(() => import("./replica").then((m) => ({ default: m.AppR
 const AppReplica2 = lazy(() => import("./replica2").then((m) => ({ default: m.AppReplica2 })));
 import type { Lang } from "./i18n";
 import { LINKS, asset as findAsset, mb, num, type Stats } from "./github";
+import STAGES from "./stages.json";
 import { useT } from "./i18n";
 
 export type Theme = "dark" | "light";
@@ -181,6 +182,7 @@ export function Nav({ theme, setTheme, stars }: { theme: Theme; setTheme: (t: Th
     ["features", t.nav.features],
     ["how", t.nav.how],
     ["gallery", t.nav.gallery],
+    ["map", t.nav.map],
     ["faq", t.nav.faq],
     ["team", t.nav.team],
   ];
@@ -441,6 +443,75 @@ function RadarCell({ labels }: { labels: ReturnType<typeof useT>["t"]["radar"] }
       <Radar blips={BLIPS} labels={labels} size={size} />
       <span className="feat-radar-hint">{labels.hint}</span>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------ project map + stages */
+
+const DRAWIO_FILE = "diagram/dropship-ar.drawio";
+
+export function Diagram({ theme }: { theme: Theme }) {
+  const { t, lang } = useT();
+  const svg = asset(`diagram/architecture-${lang}-${theme}.svg`);
+  // draw.io opens a file straight from a URL (#U…); GitHub Pages sends the CORS header it needs
+  const drawioUrl = `https://app.diagrams.net/#U${encodeURIComponent(new URL(asset(DRAWIO_FILE), window.location.href).href)}`;
+  return (
+    <section className="section" id="map">
+      <div className="container">
+        <Reveal className="section-head">
+          <Kicker>{t.diagram.kicker}</Kicker>
+          <h2>
+            <SplitWords text={t.diagram.title} />
+          </h2>
+          <p className="lead">{t.diagram.subtitle}</p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <a className="diagram-frame" href={svg} target="_blank" rel="noreferrer" title={t.diagram.svg}>
+            <img src={svg} alt={t.diagram.title} width={1720} height={1150} loading="lazy" decoding="async" />
+          </a>
+          <div className="diagram-actions">
+            <a className="btn btn-primary btn-sm" href={drawioUrl} target="_blank" rel="noreferrer">
+              <ExternalLink size={16} aria-hidden="true" /> {t.diagram.open}
+            </a>
+            <a className="btn btn-ghost btn-sm" href={asset(DRAWIO_FILE)} download>
+              {t.diagram.download}
+            </a>
+            <a className="btn btn-ghost btn-sm" href={svg} target="_blank" rel="noreferrer">
+              {t.diagram.svg}
+            </a>
+            <span className="diagram-hint">{t.diagram.hint}</span>
+          </div>
+        </Reveal>
+
+        <Reveal className="section-head stages-head">
+          <Kicker>{t.diagram.stagesKicker}</Kicker>
+          <h2>
+            <SplitWords text={t.diagram.stagesTitle} />
+          </h2>
+          <p className="lead">{t.diagram.stagesSubtitle}</p>
+        </Reveal>
+        <ol className="stages">
+          {STAGES.map((s, i) => {
+            const lines = lang === "ar" ? s.ar : s.en;
+            return (
+              <Reveal key={s.img + i} as="li" delay={(i % 2) * 0.1} className="stage">
+                <div className="stage-shot">
+                  <img src={asset(s.img)} alt={lines[0]} loading="lazy" decoding="async" />
+                </div>
+                <div className="stage-body">
+                  <div className="stage-meta">
+                    <span className="stage-num" dir="ltr">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="stage-date" dir="ltr">{s.date}</span>
+                  </div>
+                  <h3>{lines[0]}</h3>
+                  <p>{lines.slice(1).join(" ")}</p>
+                </div>
+              </Reveal>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
   );
 }
 

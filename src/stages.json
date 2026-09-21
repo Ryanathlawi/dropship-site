@@ -1,0 +1,114 @@
+[
+  {
+    "date": "2026-08",
+    "img": "img/en-expanded.webp",
+    "ar": [
+      "الأصل: dropship v3 من stormy",
+      "إعادة كتابة كاملة بواجهة إنجليزية،",
+      "حظر عبر WFP وقائمة سيرفرات حيّة"
+    ],
+    "en": [
+      "Origin: dropship v3 by stormy",
+      "full rewrite, English UI,",
+      "WFP blocking and a live server list"
+    ]
+  },
+  {
+    "date": "2026-09-19",
+    "img": "img/stage-ar-v30.webp",
+    "ar": [
+      "النسخة العربية v3.0.6 – 3.0.8",
+      "تعريب كامل من اليمين لليسار، خط ثمانية،",
+      "ترحيب وجولة تعريفية، إصلاحان أُرسلا للأصل"
+    ],
+    "en": [
+      "Arabic edition v3.0.6 – 3.0.8",
+      "full right-to-left UI, Thmanyah font,",
+      "welcome + guided tour, two fixes sent upstream"
+    ]
+  },
+  {
+    "date": "2026-09-19",
+    "img": "img/stage-site.webp",
+    "ar": [
+      "الموقع",
+      "React 19 + Vite، عربي وإنجليزي،",
+      "إحصائيات حيّة من GitHub، نسخة تجريبية في المتصفح"
+    ],
+    "en": [
+      "The website",
+      "React 19 + Vite, Arabic & English,",
+      "live GitHub stats, a playable replica in the browser"
+    ]
+  },
+  {
+    "date": "2026-09-20",
+    "img": "img/ar-presets.webp",
+    "ar": [
+      "تصميم الواجهة الجديدة",
+      "لوحة تحكم ✗ → واجهة ألعاب ✗ → لانشر ✓",
+      "أربع لوحات ألوان، اختير التيل على الغرافيت"
+    ],
+    "en": [
+      "Designing the new UI",
+      "dashboard ✗ → gaming HUD ✗ → launcher ✓",
+      "four palettes, teal on graphite chosen"
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "img": "img/ar-main-dark.webp",
+    "ar": [
+      "v3.1.0 — اللانشر",
+      "خريطة عالم حيّة، أعلام، أفضل مسار،",
+      "اختصارات حظر بمفاتيح، جولة من 14 خطوة"
+    ],
+    "en": [
+      "v3.1.0 — the launcher",
+      "live world map, flags, best route,",
+      "blocking presets with hotkeys, 14-step tour"
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "img": "img/stage-credits.webp",
+    "ar": [
+      "v3.1.1 — الحقوق والتواصل",
+      "المساعدة: ديسكورد النسخة العربية ودعم PayPal،",
+      "معلومات الإصدار في الـ exe من Cargo.toml"
+    ],
+    "en": [
+      "v3.1.1 — credits & contact",
+      "help view: Arabic Discord and PayPal support,",
+      "exe version info generated from Cargo.toml"
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "img": "img/stage-ping.webp",
+    "ar": [
+      "v3.1.2 — بنق حيّ",
+      "قياس كل 15 ثانية لكل السيرفرات،",
+      "حتى اللي تتجاهل الـ ping تُقاس من داخل شبكتها"
+    ],
+    "en": [
+      "v3.1.2 — live ping",
+      "every server re-measured every 15 s,",
+      "silent ones measured inside their own network"
+    ]
+  },
+  {
+    "date": "2026-09-21",
+    "img": "img/stage-mobile.webp",
+    "ar": [
+      "الموقع على الجوال",
+      "اللانشر يتحول لتطبيق جوال: خريطة تُسحب،",
+      "بطاقات، وشريط تبويبات سفلي"
+    ],
+    "en": [
+      "The site on phones",
+      "the launcher becomes a mobile app: pannable map,",
+      "cards and a bottom tab bar"
+    ]
+  }
+]
