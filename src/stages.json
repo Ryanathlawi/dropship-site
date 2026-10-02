@@ -94,5 +94,17 @@
       "Phones + this map",
       "the launcher as a mobile app, and this map on the site"
     ]
+  },
+  {
+    "date": "2026-10-02",
+    "img": "img/stage-english.webp",
+    "ar": [
+      "v3.2.0 — عربي وإنجليزي",
+      "يفتح بلغة جهازك والواجهة تنقلب معها"
+    ],
+    "en": [
+      "v3.2.0 — English and Arabic",
+      "opens in your PC's language, layout flips with it"
+    ]
   }
 ]

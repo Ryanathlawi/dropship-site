@@ -28,7 +28,7 @@
 <text x="16" y="100" font-size="10.5" font-weight="400" fill="#4d5966" text-anchor="start">firewall, the loops, the interfaces, the update path —</text>
 <text x="16" y="114" font-size="10.5" font-weight="400" fill="#4d5966" text-anchor="start">developed by Ryan Athlawi, built on dropship by stormy</text>
 <rect x="16" y="138" width="56" height="22" rx="11.0" fill="#ffffff" stroke="#d8dee6" stroke-width="1.5"/>
-<text class="m" x="44" y="153" font-size="10.5" font-weight="400" fill="#0f1319" text-anchor="middle">v3.1.4</text>
+<text class="m" x="44" y="153" font-size="10.5" font-weight="400" fill="#0f1319" text-anchor="middle">v3.2.0</text>
 <rect x="78" y="138" width="63" height="22" rx="11.0" fill="#ffffff" stroke="#d8dee6" stroke-width="1.5"/>
 <text class="m" x="110" y="153" font-size="10.5" font-weight="400" fill="#0f1319" text-anchor="middle">GPL-3.0</text>
 <rect x="147" y="138" width="216" height="22" rx="11.0" fill="#ffffff" stroke="#d8dee6" stroke-width="1.5"/>

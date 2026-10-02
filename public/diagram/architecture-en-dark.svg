@@ -37,7 +37,7 @@
 <rect x="1178" y="44" width="78" height="30" rx="15.0" fill="#12161b" stroke="#252c35" stroke-width="1.5"/>
 <text class="m" x="1217" y="63" font-size="12" font-weight="400" fill="#eef0f3" text-anchor="middle">GPL-3.0</text>
 <rect x="1098" y="44" width="70" height="30" rx="15.0" fill="#12161b" stroke="#252c35" stroke-width="1.5"/>
-<text class="m" x="1133" y="63" font-size="12" font-weight="400" fill="#eef0f3" text-anchor="middle">v3.1.4</text>
+<text class="m" x="1133" y="63" font-size="12" font-weight="400" fill="#eef0f3" text-anchor="middle">v3.2.0</text>
 <path d="M40 134 L1880 134" fill="none" stroke="#252c35" stroke-width="1" opacity="1"/>
 <rect x="70" y="228" width="300" height="82" rx="12" fill="#12161b" stroke="#252c35" stroke-width="1.5" filter="url(#sh)"/>
 <circle cx="96" cy="254" r="16" fill="#8fa3b8" opacity="0.16"/>

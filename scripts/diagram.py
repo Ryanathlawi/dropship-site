@@ -23,7 +23,7 @@ for d in (OUT, THUMBS, ICONS):
 SITE = "https://ryanathlawi.github.io/dropship-site/"
 
 W, H = 1920, 1400
-VERSION = "v3.1.4"
+VERSION = "v3.2.0"
 
 
 def T(ar, en):
@@ -192,6 +192,9 @@ STAGES = [
     ("2026-09-21", "img/stage-mobile.webp",
      T(["الجوال + المخطط", "اللانشر كتطبيق جوال، وهذا المخطط في الموقع"],
        ["Phones + this map", "the launcher as a mobile app, and this map on the site"])),
+    ("2026-10-02", "img/stage-english.webp",
+     T(["v3.2.0 — عربي وإنجليزي", "يفتح بلغة جهازك والواجهة تنقلب معها"],
+       ["v3.2.0 — English and Arabic", "opens in your PC's language, layout flips with it"])),
 ]
 
 CALLOUTS = [  # (x, y داخل لقطة 1001×698، {ar, en})

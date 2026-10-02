@@ -193,8 +193,8 @@ TXT = {
     "legend": T("الأسهم: تدفّق البيانات · المتقطّع: يتكرّر بمؤقّت · الأرقام الذهبية على اللقطة مشروحة جنبها",
                 "arrows: data flow  ·  dashed: repeats on a timer  ·  gold numbers on the screenshot are explained beside it"),
     "chips": {"upstream": T([], ["v3.0.6 + PR", "GPL-3.0", "Rust · eframe/egui 0.36 · tokio", "Windows 10 / 11", "one exe, no installer"]),
-              "site": T(["v3.1.4", "GPL-3.0", "Rust · eframe/egui 0.36 · tokio", "Windows 10 / 11", "exe واحد بلا تثبيت"],
-                        ["v3.1.4", "GPL-3.0", "Rust · eframe/egui 0.36 · tokio", "Windows 10 / 11", "one exe, no installer"])},
+              "site": T(["v3.2.0", "GPL-3.0", "Rust · eframe/egui 0.36 · tokio", "Windows 10 / 11", "exe واحد بلا تثبيت"],
+                        ["v3.2.0", "GPL-3.0", "Rust · eframe/egui 0.36 · tokio", "Windows 10 / 11", "one exe, no installer"])},
     "z_pc": T("01 · جهاز اللاعب", "01 · PLAYER'S PC"),
     "z_net": T("02 · Blizzard والإنترنت", "02 · BLIZZARD & THE INTERNET"),
     "z_gh": T("03 · GitHub", "03 · GITHUB"),
@@ -861,7 +861,7 @@ def main():
         "classic_en": shot(img("pr/pr_en.png"), "classic_en", 250, 57, THUMBS),
         "classic_ar": shot(img("pr/pr_ar.png"), "classic_ar", 250, 57, THUMBS),
     }
-    version = "v3.1.4"
+    version = "v3.2.0"
     pages = []
     for lang in ("ar", "en"):
         for theme in ("light", "dark"):

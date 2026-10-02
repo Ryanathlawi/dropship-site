@@ -48,7 +48,7 @@ const project = ([lat, lon]: [number, number]) => ({
 
 const L = {
   en: {
-    edition: "arabic edition",
+    edition: "Athlawi edition",
     filter: "filter",
     on: "active",
     off: "standby",
@@ -68,7 +68,7 @@ const L = {
     mini: "mini",
     palette: "colors",
     pals: { teal: "teal", violet: "violet", ember: "ember", green: "green" } as Record<Pal, string>,
-    foot: "original app by stormy · arabic edition by Ryan Athlawi",
+    foot: "original app by stormy · Athlawi edition by Ryan Athlawi",
     keys: { close: "close", toggle: "toggle", invert: "invert others" },
     blockedN: (n: number) => `${n} blocked`,
   },
@@ -255,7 +255,7 @@ export function AppReplica2({ siteLang, siteTheme }: { siteLang: Lang; siteTheme
             <img src={asset("img/white-bolts.png")} alt="" width={16} height={16} />
           </span>
           <b>dropship</b>
-          <span className="lch-ver">v3.1.0 · {t.edition}</span>
+          <span className="lch-ver">v3.2.0 · {t.edition}</span>
         </div>
         <div className="lch-chips">
           <span className={`lch-chip ${blocked.size ? "on" : ""}`}>

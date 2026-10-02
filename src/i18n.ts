@@ -9,11 +9,11 @@ export const en = {
       "dropship is a free, portable server selector for Overwatch 2. Block the regions you don't want and play where your ping is best. Nothing in the game is touched.",
   },
   announce: [
-    { text: "Arabic edition v3.1.2: live ping for every server, blocking presets, the launcher map", href: "#download" },
+    { text: "Athlawi edition v3.2.0: now in English too, with live ping in ms for every server", href: "#download" },
     { text: "v3.0.6 is out: 9 MB, no installer, in-app updates", href: "#download" },
-    { text: "The Arabic version is here, with a full right-to-left layout", href: "#download" },
+    { text: "It opens in your language: Arabic or English, picked from your PC", href: "#download" },
     { text: "Something not working? Real people answer in the Discord", href: "https://discord.gg/QYrF8CVhbC" },
-    { text: "Like the Arabic edition? Support its development", href: "https://www.paypal.com/paypalme/RayanAthlawi" },
+    { text: "Like the Athlawi edition? Support its development", href: "https://www.paypal.com/paypalme/RayanAthlawi" },
   ],
   nav: {
     features: "Features",
@@ -39,7 +39,7 @@ export const en = {
     ctaAr: "Arabic version",
     ctaGit: "View source",
     hint: "Windows 10 / 11 · a single .exe, no installer",
-    credits: "Arabic edition, launcher and this site by Ryan Athlawi · original app by stormy",
+    credits: "Athlawi edition, launcher and this site by Ryan Athlawi · original app by stormy",
     chipAllowed: "allowed",
     chipBlocked: "blocked",
     chipLikely: "most likely to play on",
@@ -80,7 +80,7 @@ export const en = {
     before: "How it was",
     after: "How it is now",
     beforeNote: "The original interface, still what the English build ships.",
-    afterNote: "The Arabic edition's new interface, shipped in v3.1.0: a launcher with a living world map, flags and blocking presets. An interactive replica; the real one is a download away.",
+    afterNote: "The Athlawi edition's new interface, shipped in v3.1.0: a launcher with a living world map, flags and blocking presets. An interactive replica; the real one is a download away.",
   },
   stats: {
     downloads: "Downloads",
@@ -123,7 +123,7 @@ export const en = {
       },
       {
         title: "English and Arabic",
-        text: "A full right-to-left layout with Arabic fonts. Available in the Arabic build today and on its way to the main app.",
+        text: "Both languages in one app. It opens in Arabic if your PC has Arabic Windows or an Arabic keyboard, otherwise in English, and you can switch any time in options.",
       },
       {
         title: "Guided tour",
@@ -163,14 +163,14 @@ export const en = {
     kicker: "Project map",
     title: "The whole project in one picture.",
     subtitle:
-      "Every piece and how it talks to the others: the game, the Windows firewall, the app's UI, core and modules, stormy's server list, Blizzard's regions, and the Arabic edition's repos, releases and site.",
+      "Every piece and how it talks to the others: the game, the Windows firewall, the app's UI, core and modules, stormy's server list, Blizzard's regions, and the Athlawi edition's repos, releases and site.",
     open: "Open in draw.io",
     download: "Download .drawio",
     svg: "Open the SVG",
     hint: "Editable in draw.io (Arabic and English pages). Click the picture to open it full size.",
     stagesKicker: "Development stages",
     stagesTitle: "From the original app to today.",
-    stagesSubtitle: "Every stage the Arabic edition went through, with a picture of what it looked like at the time.",
+    stagesSubtitle: "Every stage the Athlawi edition went through, with a picture of what it looked like at the time.",
   },
   gallery: {
     kicker: "Screenshots",
@@ -179,7 +179,7 @@ export const en = {
     items: [
       { key: "en-expanded", label: "Expanded", caption: "The main window: your game, the server list and the tabs." },
       { key: "en-collapsed", label: "Collapsed", caption: "Collapsed mode keeps only the server list on screen." },
-      { key: "ar-main-dark", label: "Arabic · dark", caption: "The Arabic edition's launcher: a live world map with routes from you to every allowed server, flags, and a best-route card." },
+      { key: "ar-main-dark", label: "Arabic · dark", caption: "The Athlawi edition's launcher: a live world map with routes from you to every allowed server, flags, and a best-route card." },
       { key: "ar-main-light", label: "Arabic · light", caption: "Light theme, same layout." },
       { key: "ar-presets", label: "Presets", caption: "Blocking presets: one click or a hotkey applies a set of blocked servers; make your own in two steps." },
       { key: "ar-tour", label: "Guided tour", caption: "The onboarding tour dims the window and explains each panel." },
@@ -229,9 +229,9 @@ export const en = {
     title: "The people behind dropship.",
     stormyRole: "Creator of dropship",
     stormyText: "Wrote the original app from scratch and maintains it for the whole community.",
-    ryanRole: "Developer of the Arabic edition · website & community",
+    ryanRole: "Developer of the Athlawi edition · website & community",
     ryanText:
-      "Develops and maintains the Arabic edition: the launcher interface with its live world map, blocking presets, the guided tour, Thmanyah typography, this whole website and the Arabic community around it — built on stormy's dropship core under the same GPL-3.0.",
+      "Develops and maintains the Athlawi edition: the launcher interface with its live world map, blocking presets, the guided tour, Thmanyah typography, this whole website and the Arabic community around it — built on stormy's dropship core under the same GPL-3.0.",
     contributors: "Contributors on GitHub",
     website: "Website",
     support: "Support",
@@ -248,9 +248,9 @@ export const en = {
     official: "Official",
     officialName: "dropship",
     officialText: "The original app by stormy. English interface.",
-    arabic: "Arabic",
-    arabicName: "dropship — Arabic version",
-    arabicText: "Arabic interface with the Thmanyah font and a guided tour. Choose the plain build or the one with animations.",
+    arabic: "Athlawi edition",
+    arabicName: "dropship — Athlawi edition",
+    arabicText: "English and Arabic, picked from your PC, live ping in ms for every server, a world map and a guided tour. Choose the plain build or the one with animations.",
     exe: "Download .exe",
     plain: "Plain build",
     animated: "Animated build",
@@ -263,11 +263,11 @@ export const en = {
   footer: {
     disclaimer:
       "Not affiliated with Blizzard Entertainment. Overwatch is a trademark of Blizzard Entertainment, Inc.",
-    made: "Arabic edition, launcher and this website by Ryan Athlawi · original app by stormy.",
+    made: "Athlawi edition, launcher and this website by Ryan Athlawi · original app by stormy.",
     source: "Site source",
     discord: "Discord",
     issues: "Report an issue",
-    support: "Support the Arabic edition",
+    support: "Support the Athlawi edition",
   },
 };
 
@@ -280,9 +280,9 @@ export const ar: Dict = {
       "dropship برنامج مجاني ومحمول لاختيار سيرفرات أوفرواتش 2. احظر المناطق اللي ما تبيها والعب حيث البنق أفضل. ما يلمس اللعبة أبدًا.",
   },
   announce: [
-    { text: "النسخة العربية 3.1.2: بنق حيّ لكل السيرفرات، اختصارات حظر، وخريطة اللانشر", href: "#download" },
+    { text: "النسخة العربية 3.2.0: صارت بالإنجليزي كمان، وتختار لغتك وحدها", href: "#download" },
     { text: "الإصدار 3.0.6 متوفر: 9 م.ب، بدون تثبيت، وتحديثات داخل البرنامج", href: "#download" },
-    { text: "النسخة العربية وصلت، بتخطيط كامل من اليمين لليسار", href: "#download" },
+    { text: "البرنامج يفتح بلغتك: عربي أو إنجليزي حسب جهازك", href: "#download" },
     { text: "شي ما يشتغل؟ ناس حقيقيين يردون عليك في ديسكورد النسخة العربية", href: "https://discord.gg/H8sq6Uc3kA" },
     { text: "أعجبتك النسخة العربية؟ ادعم استمرار تطويرها", href: "https://www.paypal.com/paypalme/RayanAthlawi" },
   ],
@@ -394,7 +394,7 @@ export const ar: Dict = {
       },
       {
         title: "عربي وإنجليزي",
-        text: "تخطيط كامل من اليمين لليسار بخطوط عربية. متوفر اليوم في النسخة العربية وفي طريقه للبرنامج الأساسي.",
+        text: "اللغتين في برنامج واحد: يفتح بالعربي لو ويندوز عربي أو عندك لوحة مفاتيح عربية، وغير كذا بالإنجليزي، وتقدر تغيّرها من الخيارات وقت ما تبي",
       },
       {
         title: "جولة تعريفية",
@@ -521,7 +521,7 @@ export const ar: Dict = {
     officialText: "البرنامج الأصلي من stormy. واجهة إنجليزية.",
     arabic: "عربي",
     arabicName: "dropship — النسخة العربية",
-    arabicText: "واجهة عربية بخط ثمانية وجولة تعريفية. اختر النسخة العادية أو النسخة بالأنميشن.",
+    arabicText: "عربي وإنجليزي حسب جهازك، بنق بالأرقام لكل سيرفر، خريطة للعالم وجولة تعريفية، واختر النسخة العادية أو النسخة بالأنميشن",
     exe: "تحميل البرنامج",
     plain: "النسخة العادية",
     animated: "نسخة الأنميشن",
