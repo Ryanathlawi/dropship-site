@@ -36,7 +36,7 @@ export const en = {
     subtitle:
       "dropship is a portable server selector. Block the regions you don't want, and the matchmaker keeps you where your ping is best. Nothing in the game is touched.",
     cta: "Download for Windows",
-    ctaAr: "Arabic version",
+    ctaAr: "Athlawi edition",
     ctaGit: "View source",
     hint: "Windows 10 / 11 · a single .exe, no installer",
     credits: "Athlawi edition, launcher and this site by Ryan Athlawi · original app by stormy",
@@ -79,7 +79,7 @@ export const en = {
     tip: "Left click blocks or allows a server. Right click keeps that server and flips all the others, exactly like the app. The ping numbers here are demo values that drift like the real list; the app measures the real ones every 15 seconds.",
     before: "How it was",
     after: "How it is now",
-    beforeNote: "The original interface, still what the English build ships.",
+    beforeNote: "The original interface, still what stormy's build ships.",
     afterNote: "The Athlawi edition's new interface, shipped in v3.1.0: a launcher with a living world map, flags and blocking presets. An interactive replica; the real one is a download away.",
   },
   stats: {
@@ -307,7 +307,7 @@ export const ar: Dict = {
     subtitle:
       "dropship برنامج محمول لاختيار السيرفرات. احظر المناطق اللي ما تبيها، ويبقيك الماتش ميكر حيث البنق أفضل. ما يلمس اللعبة أبدًا.",
     cta: "تحميل النسخة العربية",
-    ctaAr: "النسخة الإنجليزية",
+    ctaAr: "النسخة الأصلية",
     ctaGit: "الكود المصدري",
     hint: "ويندوز 10 / 11 · ملف .exe واحد بدون تثبيت",
     credits: "النسخة العربية واللانشر وهذا الموقع من تطوير ريان الأثلاوي · البرنامج الأصلي من stormy",
@@ -350,7 +350,7 @@ export const ar: Dict = {
     tip: "الضغطة اليسرى تحظر السيرفر أو تسمح به. الضغطة اليمنى تبقي هذا السيرفر وتعكس كل الباقي، بالضبط مثل البرنامج. أرقام البنق هنا تجريبية وتتحرك مثل القائمة الحقيقية؛ البرنامج يقيس الحقيقية كل 15 ثانية.",
     before: "كيف كان",
     after: "كيف صار",
-    beforeNote: "الواجهة الأصلية، وما تزال في النسخة الإنجليزية.",
+    beforeNote: "الواجهة الأصلية، وما تزال في نسخة stormy",
     afterNote: "الواجهة الجديدة للنسخة العربية كما صدرت في الإصدار 3.1.0: لانشر بخريطة عالم حيّة وأعلام واختصارات حظر. نسخة تفاعلية، والحقيقية على بُعد تحميل.",
   },
   stats: {
