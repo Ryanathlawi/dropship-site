@@ -173,7 +173,7 @@ STAGES = [
        ["Origin: dropship v3", "by stormy — a full rewrite, English UI, WFP blocking"])),
     ("2026-09-19", "img/stage-ar-v30.webp",
      T(["النسخة العربية 3.0.6–3.0.8", "تعريب كامل، خط ثمانية، ترحيب وجولة، إصلاحان للأصل"],
-       ["Arabic edition 3.0.6–3.0.8", "full RTL UI, Thmanyah font, welcome + tour, two fixes upstream"])),
+       ["Athlawi edition 3.0.6–3.0.8", "full Arabic UI, Thmanyah font, welcome + tour, two fixes upstream"])),
     ("2026-09-19", "img/stage-site.webp",
      T(["الموقع", "React 19 + Vite، عربي/إنجليزي، إحصائيات حيّة، نسخة تجريبية"],
        ["The website", "React 19 + Vite, Arabic/English, live stats, playable replica"])),

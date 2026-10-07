@@ -134,8 +134,8 @@ CALLOUTS = {  # نقاط داخل لقطة 1001×698 — اللانشر الإن
     "site": [(600, 300), (177, 380), (254, 155), (780, 585), (971, 200), (640, 55), (500, 677)],
 }
 CALLOUT_TXT = [
-    T(["الخريطة", "عالم منقّط ومسار منك إلى كل سيرفر مسموح؛ نقرة على نقطته تحجبه، ونقرة يمين تفرده وحده"],
-      ["The map", "dotted world, a route from you to every allowed server; click a dot to block it, right-click to solo it"]),
+    T(["الخريطة", "عالم منقّط ومسار منك إلى كل سيرفر مسموح، والنقرة على نقطته تحجبه"],
+      ["The map", "dotted world, a route from you to every allowed server; click a dot to block it"]),
     T(["لوحة السيرفرات", "علم، اسم، شريط بينق حيّ، مفتاح تشغيل — ترتيب حسب البينق؛ نفس قائمة الواجهة الكلاسيكية"],
       ["Servers panel", "flag, name, live ping bar, on/off switch — sortable by ping; the same list as the classic view"]),
     T(["الاختصارات", "أوروبا = F1 جاهز؛ و + ينشئ اختصارك: اسم، مفتاح اختياري، ثم السيرفرات"],
@@ -183,7 +183,7 @@ LIFE = [
 ]
 
 TXT = {
-    "title": {"upstream": T("dropship", "dropship"), "site": T("dropship — النسخة العربية", "dropship — Arabic edition")},
+    "title": {"upstream": T("dropship", "dropship"), "site": T("dropship — النسخة العربية", "dropship — Athlawi edition")},
     "title2": {"upstream": T("", "— architecture map"), "site": T("· المخطط الهندسي", "· engineering map")},
     "subtitle": {
         "upstream": T("", "How the app works, from the game to the server: the firewall, the loops, the interfaces, the update path — as of the localization / live-ping / presets / launcher pull request."),
@@ -209,12 +209,12 @@ TXT = {
     "app_sub": T("Rust · eframe/egui · tokio — عملية واحدة، نافذة واحدة، بلا خدمة", "Rust · eframe/egui · tokio  —  one process, one window, no service"),
     "app_note": T("قائمة كلاسيكية أو نقطة على الخريطة — نقرة تحجب، ونفس المحرّك تحتهما", "classic list or map dot — one click blocks, the same engine underneath"),
     "shot1": {"upstream": T("", "the launcher — options → interface → launcher; off by default, a real screenshot"),
-              "site": T("اللانشر — الخيارات ← الواجهة ← اللانشر؛ لقطة حقيقية من النسخة العربية", "the launcher — options → interface → launcher; a real screenshot of the Arabic edition")},
+              "site": T("اللانشر — الخيارات ← الواجهة ← اللانشر؛ لقطة حقيقية من النسخة العربية", "the launcher — options → interface → launcher; a real screenshot of the Athlawi edition")},
     "shot2": T("الواجهة الكلاسيكية تعمل كما هي، مع صفّ الاختصارات فقط", "the classic view keeps working exactly as today, plus the presets row"),
     "numbers": T("ما تشير إليه الأرقام", "WHAT THE NUMBERS POINT AT"),
     "three": T("نفس الحالة بثلاث طرق", "THE SAME STATE, THREE WAYS"),
     "th_cen": T("كلاسيكي · إنجليزي — كما هو تمامًا", "classic · English — pixel-identical to today"),
-    "th_car": T("كلاسيكي · عربي — معكوس من اليمين لليسار", "classic · Arabic — mirrored, right-to-left"),
+    "th_car": T("كلاسيكي · عربي", "classic · Arabic"),
     "th_l": {"upstream": T("", "launcher · Arabic"), "site": T("اللانشر · إنجليزي", "launcher · English")},
     "th_light": T("اللانشر · الثيم الفاتح", "launcher · light theme"),
     "th_note": T(["اللغة تتبع الجهاز أو الخيارات ← اللغة؛", "والثيم كما كان: داكن أو فاتح"], ["language follows the PC, or options →", "language; the theme is yours as before"]),
@@ -248,7 +248,7 @@ TXT = {
     "e_update": T("تحديث؟ كل 2.5 س", "update? every 2.5 h"),
     "credit": {"upstream": T("", "dropship by stormy · GPL-3.0 · this map accompanies the localization / live-ping / presets / launcher pull request · drawn by Ryan Athlawi, 2026"),
                "site": T("dropship — النسخة العربية · تصميم وتطوير ريان الأثلاوي · الأصل stormy (GPL-3.0) · 2026",
-                         "dropship — Arabic edition · designed and developed by Ryan Athlawi · original by stormy (GPL-3.0) · 2026")},
+                         "dropship — Athlawi edition · designed and developed by Ryan Athlawi · original by stormy (GPL-3.0) · 2026")},
     "gen": T("مولَّد من الكود — scripts/diagram_map.py", "generated from the code — scripts/diagram_map.py"),
     "n_allowed": T("◀ من جدار الحماية: المناطق المسموحة فقط تمرّ", "◀ from the firewall: only allowed regions get through"),
     "n_ping": T("◀ من البرنامج: بينق كل 15 ث", "◀ from the app: ping every 15 s"),
